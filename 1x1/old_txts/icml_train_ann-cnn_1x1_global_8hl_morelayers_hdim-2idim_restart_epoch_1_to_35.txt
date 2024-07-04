@@ -1,0 +1,43 @@
+In this Ablation study, total layers have been increased from 6 to 10, i.e., 4 hidden layers to 8 hidden layers (with dropout 0.2 and normal RMSE). Batch size reduced from 80 to 40
+Done
+total_time=1.560612678527832
+model1 created. 
+ --- model1 size: 19.64 MBs,
+ --- Num params: 5.132 mil. 
+Training...
+Epoch 1, 1/35, training error: 0.372173, testing error: 0.646362
+Epoch 2, 2/35, training error: 0.352718, testing error: 0.675623
+Epoch 3, 3/35, training error: 0.342440, testing error: 0.658697
+Epoch 4, 4/35, training error: 0.338727, testing error: 0.582876
+Epoch 5, 5/35, training error: 0.334313, testing error: 0.658703
+Epoch 6, 6/35, training error: 0.331334, testing error: 0.680594
+Epoch 7, 7/35, training error: 0.329417, testing error: 0.646977
+Epoch 8, 8/35, training error: 0.327672, testing error: 0.669822
+Epoch 9, 9/35, training error: 0.326366, testing error: 0.693693
+Epoch 10, 10/35, training error: 0.325082, testing error: 0.684754
+Epoch 11, 11/35, training error: 0.324470, testing error: 0.683268
+Epoch 12, 12/35, training error: 0.323502, testing error: 0.714001
+Epoch 13, 13/35, training error: 0.322302, testing error: 0.681752
+Epoch 14, 14/35, training error: 0.321541, testing error: 0.682645
+Epoch 15, 15/35, training error: 0.321497, testing error: 0.702691
+Epoch 16, 16/35, training error: 0.320547, testing error: 0.704212
+Epoch 17, 17/35, training error: 0.320049, testing error: 0.690892
+Epoch 18, 18/35, training error: 0.319480, testing error: 0.673995
+Epoch 19, 19/35, training error: 0.319375, testing error: 0.679109
+Epoch 20, 20/35, training error: 0.318773, testing error: 0.694001
+Epoch 21, 21/35, training error: 0.318431, testing error: 0.706814
+Epoch 22, 22/35, training error: 0.318242, testing error: 0.706897
+Epoch 23, 23/35, training error: 0.317632, testing error: 0.687243
+Epoch 24, 24/35, training error: 0.317390, testing error: 0.707119
+Epoch 25, 25/35, training error: 0.317525, testing error: 0.691224
+Epoch 26, 26/35, training error: 0.317055, testing error: 0.688790
+Epoch 27, 27/35, training error: 0.316642, testing error: 0.710705
+Epoch 28, 28/35, training error: 0.316734, testing error: 0.700477
+Epoch 29, 29/35, training error: 0.316206, testing error: 0.702595
+Epoch 30, 30/35, training error: 0.316013, testing error: 0.692137
+Epoch 31, 31/35, training error: 0.315875, testing error: 0.686205
+Epoch 32, 32/35, training error: 0.315936, testing error: 0.703470
+Epoch 33, 33/35, training error: 0.315465, testing error: 0.686375
+Epoch 34, 34/35, training error: 0.315208, testing error: 0.700139
+Epoch 35, 35/35, training error: 0.315167, testing error: 0.684726
+Done

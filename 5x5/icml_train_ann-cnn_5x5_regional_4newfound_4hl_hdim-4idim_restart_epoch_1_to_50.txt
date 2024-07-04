@@ -1,0 +1,36 @@
+NGPUS = 1
+Dataset class defined
+train batch size = 80
+validation batch size = 80
+Region: 4newfound
+Region: 4newfound, y1=47, y2=58, x1=103, x2=119
+Region: 4newfound, y1=47, y2=58, x1=103, x2=119
+total_time=1.696681261062622
+model1 created. 
+ --- model1 size: 24.26 MBs,
+ --- Num params: 6.349 mil. 
+Model created
+Training...
+Epoch 1, 1/50, training error: 0.516795, testing error: 0.535731
+Epoch 2, 2/50, training error: 0.514846, testing error: 0.544270
+Epoch 3, 3/50, training error: 0.512011, testing error: 0.537968
+Epoch 4, 4/50, training error: 0.501939, testing error: 0.521087
+Epoch 5, 5/50, training error: 0.499422, testing error: 0.530895
+Epoch 6, 6/50, training error: 0.499818, testing error: 0.523103
+Epoch 7, 7/50, training error: 0.494098, testing error: 0.504914
+Epoch 8, 8/50, training error: 0.488956, testing error: 0.511825
+Epoch 9, 9/50, training error: 0.487049, testing error: 0.514190
+Epoch 10, 10/50, training error: 0.479024, testing error: 0.506757
+Epoch 11, 11/50, training error: 0.472112, testing error: 0.498899
+Epoch 12, 12/50, training error: 0.473115, testing error: 0.510248
+Epoch 13, 13/50, training error: 0.469274, testing error: 0.505898
+Epoch 14, 14/50, training error: 0.459511, testing error: 0.479335
+Epoch 15, 15/50, training error: 0.462178, testing error: 0.496438
+Epoch 16, 16/50, training error: 0.461976, testing error: 0.493504
+Epoch 17, 17/50, training error: 0.457451, testing error: 0.497743
+Epoch 18, 18/50, training error: 0.448910, testing error: 0.476237
+Epoch 19, 19/50, training error: 0.449109, testing error: 0.502643
+Epoch 20, 20/50, training error: 0.446573, testing error: 0.486456
+Epoch 21, 21/50, training error: 0.436893, testing error: 0.455801
+Epoch 22, 22/50, training error: 0.438604, testing error: 0.472752
+Epoch 23, 23/50, training error: 0.447944, testing error: 0.477636

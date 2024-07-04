@@ -1,0 +1,24 @@
+NGPUS = 1
+Dataset class defined
+train batch size = 40
+validation batch size = 40
+Region: 1andes
+total_time=1.6983089447021484
+model1 created. 
+ --- model1 size: 15.95 MBs,
+ --- Num params: 4.170 mil. 
+Model created
+Training...
+NGPUS = 1
+Dataset class defined
+train batch size = 40
+validation batch size = 40
+Region: 1andes
+Region: 1andes, y1=3, y2=21, x1=96, x2=113
+Region: 1andes, y1=3, y2=21, x1=96, x2=113
+total_time=1.0929272174835205
+model1 created. 
+ --- model1 size: 15.95 MBs,
+ --- Num params: 4.170 mil. 
+Model created
+Training...

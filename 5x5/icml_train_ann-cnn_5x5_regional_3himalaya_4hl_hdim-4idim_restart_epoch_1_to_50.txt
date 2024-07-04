@@ -1,0 +1,39 @@
+NGPUS = 1
+Dataset class defined
+train batch size = 80
+validation batch size = 80
+Region: 3himalaya
+Region: 3himalaya, y1=41, y2=54, x1=26, x2=44
+Region: 3himalaya, y1=41, y2=54, x1=26, x2=44
+total_time=2.544046401977539
+model1 created. 
+ --- model1 size: 24.26 MBs,
+ --- Num params: 6.349 mil. 
+Model created
+Training...
+Epoch 1, 1/50, training error: 0.504069, testing error: 0.484261
+Epoch 2, 2/50, training error: 0.485049, testing error: 0.478970
+Epoch 3, 3/50, training error: 0.476168, testing error: 0.468642
+Epoch 4, 4/50, training error: 0.470435, testing error: 0.462532
+Epoch 5, 5/50, training error: 0.465270, testing error: 0.461650
+Epoch 6, 6/50, training error: 0.463023, testing error: 0.458672
+Epoch 7, 7/50, training error: 0.453395, testing error: 0.443247
+Epoch 8, 8/50, training error: 0.450696, testing error: 0.444730
+Epoch 9, 9/50, training error: 0.447605, testing error: 0.439295
+Epoch 10, 10/50, training error: 0.442160, testing error: 0.434005
+Epoch 11, 11/50, training error: 0.439301, testing error: 0.431390
+Epoch 12, 12/50, training error: 0.436342, testing error: 0.439297
+Epoch 13, 13/50, training error: 0.436005, testing error: 0.426948
+Epoch 14, 14/50, training error: 0.427651, testing error: 0.415861
+Epoch 15, 15/50, training error: 0.426213, testing error: 0.422279
+Epoch 16, 16/50, training error: 0.424704, testing error: 0.417625
+Epoch 17, 17/50, training error: 0.416795, testing error: 0.406643
+Epoch 18, 18/50, training error: 0.415023, testing error: 0.406108
+Epoch 19, 19/50, training error: 0.414402, testing error: 0.415761
+Epoch 20, 20/50, training error: 0.411394, testing error: 0.401850
+Epoch 21, 21/50, training error: 0.405053, testing error: 0.394941
+Epoch 22, 22/50, training error: 0.406072, testing error: 0.409840
+Epoch 23, 23/50, training error: 0.406140, testing error: 0.402399
+Epoch 24, 24/50, training error: 0.398858, testing error: 0.386892
+Epoch 25, 25/50, training error: 0.398818, testing error: 0.393273
+Epoch 26, 26/50, training error: 0.398384, testing error: 0.396861

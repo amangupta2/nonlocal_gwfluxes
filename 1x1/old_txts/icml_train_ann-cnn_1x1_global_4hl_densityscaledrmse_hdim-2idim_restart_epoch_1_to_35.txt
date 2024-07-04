@@ -1,0 +1,50 @@
+In this Ablation study, RMSE is scaled by the density to the power 0.1
+Done
+total_time=0.9193782806396484
+model1 created. 
+ --- model1 size: 11.27 MBs,
+ --- Num params: 2.944 mil. 
+Training...
+In this Ablation study, RMSE is scaled by the density to the power 0.1
+Done
+total_time=0.8464431762695312
+model1 created. 
+ --- model1 size: 11.27 MBs,
+ --- Num params: 2.944 mil. 
+Training...
+Epoch 1, 1/35, training error: 0.419865, testing error: 0.795344
+Epoch 2, 2/35, training error: 0.393972, testing error: 0.695986
+Epoch 3, 3/35, training error: 0.385626, testing error: 0.761668
+Epoch 4, 4/35, training error: 0.382512, testing error: 0.750442
+Epoch 5, 5/35, training error: 0.378532, testing error: 0.756345
+Epoch 6, 6/35, training error: 0.376659, testing error: 0.777041
+Epoch 7, 7/35, training error: 0.374597, testing error: 0.783409
+Epoch 8, 8/35, training error: 0.373695, testing error: 0.800376
+Epoch 9, 9/35, training error: 0.372037, testing error: 0.667344
+Epoch 10, 10/35, training error: 0.370768, testing error: 0.799833
+Epoch 11, 11/35, training error: 0.369422, testing error: 0.802197
+Epoch 12, 12/35, training error: 0.368336, testing error: 0.766517
+Epoch 13, 13/35, training error: 0.368183, testing error: 0.830136
+Epoch 14, 14/35, training error: 0.366937, testing error: 0.806237
+Epoch 15, 15/35, training error: 0.367042, testing error: 0.831911
+Epoch 16, 16/35, training error: 0.365591, testing error: 0.799890
+Epoch 17, 17/35, training error: 0.365075, testing error: 0.820401
+Epoch 18, 18/35, training error: 0.365284, testing error: 0.818629
+Epoch 19, 19/35, training error: 0.364566, testing error: 0.812497
+Epoch 20, 20/35, training error: 0.364123, testing error: 0.818166
+Epoch 21, 21/35, training error: 0.363238, testing error: 0.831543
+Epoch 22, 22/35, training error: 0.363000, testing error: 0.832923
+Epoch 23, 23/35, training error: 0.362684, testing error: 0.831514
+Epoch 24, 24/35, training error: 0.362394, testing error: 0.830929
+Epoch 25, 25/35, training error: 0.361850, testing error: 0.844239
+Epoch 26, 26/35, training error: 0.362054, testing error: 0.767787
+Epoch 27, 27/35, training error: 0.361593, testing error: 0.840129
+Epoch 28, 28/35, training error: 0.361173, testing error: 0.837463
+Epoch 29, 29/35, training error: 0.360885, testing error: 0.841834
+Epoch 30, 30/35, training error: 0.360893, testing error: 0.845995
+Epoch 31, 31/35, training error: 0.360523, testing error: 0.851105
+Epoch 32, 32/35, training error: 0.363475, testing error: 0.837298
+Epoch 33, 33/35, training error: 0.360679, testing error: 0.827692
+Epoch 34, 34/35, training error: 0.360127, testing error: 0.856045
+Epoch 35, 35/35, training error: 0.359817, testing error: 0.860471
+Done

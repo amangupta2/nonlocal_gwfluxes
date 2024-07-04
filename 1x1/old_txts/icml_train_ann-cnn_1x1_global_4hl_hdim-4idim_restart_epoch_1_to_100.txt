@@ -1,0 +1,3 @@
+In this Ablation study, multiple threads are used to make batches for global training. 10 CPUs are requested and 8 CPUs are used.
+Done
+Region: 1andes

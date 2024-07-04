@@ -1,0 +1,45 @@
+NGPUS = 1
+Dataset class defined
+train batch size = 80
+validation batch size = 80
+Region: 7natlantic
+Region: 7natlantic, y1=31, y2=44, x1=112, x2=124
+Region: 7natlantic, y1=31, y2=44, x1=112, x2=124
+total_time=1.9449958801269531
+model1 created. 
+ --- model1 size: 24.26 MBs,
+ --- Num params: 6.349 mil. 
+Model created
+Training...
+Epoch 1, 1/50, training error: 0.293062, testing error: 0.283071
+Epoch 2, 2/50, training error: 0.289412, testing error: 0.282364
+Epoch 3, 3/50, training error: 0.287966, testing error: 0.280374
+Epoch 4, 4/50, training error: 0.287342, testing error: 0.280472
+Epoch 5, 5/50, training error: 0.286881, testing error: 0.298545
+Epoch 6, 6/50, training error: 0.286393, testing error: 0.279469
+Epoch 7, 7/50, training error: 0.285680, testing error: 0.278438
+Epoch 8, 8/50, training error: 0.285371, testing error: 0.278811
+Epoch 9, 9/50, training error: 0.285116, testing error: 0.278546
+Epoch 10, 10/50, training error: 0.284526, testing error: 0.278243
+Epoch 11, 11/50, training error: 0.284033, testing error: 0.278008
+Epoch 12, 12/50, training error: 0.283814, testing error: 0.278806
+Epoch 13, 13/50, training error: 0.283253, testing error: 0.277298
+Epoch 14, 14/50, training error: 0.282535, testing error: 0.276532
+Epoch 15, 15/50, training error: 0.282667, testing error: 0.278962
+Epoch 16, 16/50, training error: 0.282319, testing error: 0.276837
+Epoch 17, 17/50, training error: 0.281759, testing error: 0.278181
+Epoch 18, 18/50, training error: 0.281620, testing error: 0.277736
+Epoch 19, 19/50, training error: 0.281465, testing error: 0.276985
+Epoch 20, 20/50, training error: 0.281132, testing error: 0.275830
+Epoch 21, 21/50, training error: 0.280432, testing error: 0.275691
+Epoch 22, 22/50, training error: 0.280783, testing error: 0.276762
+Epoch 23, 23/50, training error: 0.280463, testing error: 0.275112
+Epoch 24, 24/50, training error: 0.279389, testing error: 0.275046
+Epoch 25, 25/50, training error: 0.279712, testing error: 0.275436
+Epoch 26, 26/50, training error: 0.279720, testing error: 0.274642
+Epoch 27, 27/50, training error: 0.279069, testing error: 0.275027
+Epoch 28, 28/50, training error: 0.278666, testing error: 0.276641
+Epoch 29, 29/50, training error: 0.280426, testing error: 0.275256
+Epoch 30, 30/50, training error: 0.278584, testing error: 0.275596
+Epoch 31, 31/50, training error: 0.277576, testing error: 0.275298
+Epoch 32, 32/50, training error: 0.277837, testing error: 0.275136

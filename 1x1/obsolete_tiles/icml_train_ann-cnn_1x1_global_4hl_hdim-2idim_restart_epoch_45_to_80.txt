@@ -1,0 +1,8 @@
+Done
+Epoch 45, 1/35, training error: 0.304733, testing error: 0.869676
+Epoch 46, 2/35, training error: 0.304719, testing error: 0.855999
+Epoch 47, 3/35, training error: 0.304471, testing error: 0.854779
+Epoch 48, 4/35, training error: 0.304288, testing error: 0.864218
+Epoch 49, 5/35, training error: 0.304527, testing error: 0.870989
+Epoch 50, 6/35, training error: 0.304188, testing error: 0.865260
+Epoch 51, 7/35, training error: 0.303721, testing error: 0.855711

@@ -1,0 +1,111 @@
+In this Ablation study, multiple threads are used to make batches for global training. 10 CPUs are requested and 8 CPUs are used.
+Done
+Region: 8npacific
+Region: 8npacific, y1=27, y2=47, x1=67, x2=87
+Region: 8npacific, y1=27, y2=47, x1=67, x2=87
+total_time=1.5554478168487549
+model1 created. 
+ --- model1 size: 38.70 MBs,
+ --- Num params: 10.125 mil. 
+Training...
+Epoch 1, 1/100, training error: 0.313909, testing error: 0.381686
+Epoch 2, 2/100, training error: 0.309593, testing error: 0.387601
+Epoch 3, 3/100, training error: 0.308417, testing error: 0.459064
+Epoch 4, 4/100, training error: 0.307367, testing error: 0.441352
+Epoch 5, 5/100, training error: 0.306485, testing error: 1.046925
+Epoch 6, 6/100, training error: 0.305843, testing error: 0.517890
+Epoch 7, 7/100, training error: 0.304278, testing error: 0.546291
+Epoch 8, 8/100, training error: 0.304205, testing error: 8.416378
+Epoch 9, 9/100, training error: 0.303381, testing error: 40.371737
+Epoch 10, 10/100, training error: 0.302360, testing error: 92.810815
+Epoch 11, 11/100, training error: 0.301794, testing error: 141.922833
+Epoch 12, 12/100, training error: 0.301606, testing error: 98.662566
+Epoch 13, 13/100, training error: 0.301209, testing error: 297.979081
+Epoch 14, 14/100, training error: 0.300010, testing error: 807.581518
+Epoch 15, 15/100, training error: 0.300313, testing error: 2818.476835
+Epoch 16, 16/100, training error: 0.299997, testing error: 1630634.987826
+Epoch 17, 17/100, training error: 0.299033, testing error: 562955.136746
+Epoch 18, 18/100, training error: 0.298814, testing error: 97185.733073
+Epoch 19, 19/100, training error: 0.298398, testing error: 73471.865891
+Epoch 20, 20/100, training error: 0.297798, testing error: 60050.646736
+Epoch 21, 21/100, training error: 0.297014, testing error: 21372.228150
+Epoch 22, 22/100, training error: 0.297167, testing error: 289525.262461
+Epoch 23, 23/100, training error: 0.296889, testing error: 101939.030280
+Epoch 24, 24/100, training error: 0.295831, testing error: 6791.169670
+Epoch 25, 25/100, training error: 0.295829, testing error: 57509.788255
+Epoch 26, 26/100, training error: 0.295352, testing error: 636559.912240
+Epoch 27, 27/100, training error: 0.294882, testing error: 100158.281889
+Epoch 28, 28/100, training error: 0.294244, testing error: 136993.571927
+Epoch 29, 29/100, training error: 0.294437, testing error: 533521.774500
+Epoch 30, 30/100, training error: 0.293831, testing error: 117188.448361
+Epoch 31, 31/100, training error: 0.292892, testing error: 35534.304111
+Epoch 32, 32/100, training error: 0.293161, testing error: 225933.362906
+Epoch 33, 33/100, training error: 0.292466, testing error: 199778.961105
+Epoch 34, 34/100, training error: 0.291994, testing error: 27654.745925
+Epoch 35, 35/100, training error: 0.291444, testing error: 28920.870905
+Epoch 36, 36/100, training error: 0.291393, testing error: 57680.101890
+Epoch 37, 37/100, training error: 0.290921, testing error: 16316.248579
+Epoch 38, 38/100, training error: 0.289957, testing error: 25258.101119
+Epoch 39, 39/100, training error: 0.290148, testing error: 60966.067603
+Epoch 40, 40/100, training error: 0.289449, testing error: 11092.492810
+Epoch 41, 41/100, training error: 0.288891, testing error: 4056.863148
+Epoch 42, 42/100, training error: 0.288541, testing error: 4667.914860
+Epoch 43, 43/100, training error: 0.288379, testing error: 10162.542613
+Epoch 44, 44/100, training error: 0.287805, testing error: 949.163931
+Epoch 45, 45/100, training error: 0.287093, testing error: 247.330274
+Epoch 46, 46/100, training error: 0.287124, testing error: 295.486708
+Epoch 47, 47/100, training error: 0.286344, testing error: 905.443186
+Epoch 48, 48/100, training error: 0.285733, testing error: 216.317351
+Epoch 49, 49/100, training error: 0.285691, testing error: 283.282840
+Epoch 50, 50/100, training error: 0.285266, testing error: 42.149275
+Epoch 51, 51/100, training error: 0.284774, testing error: 6.905085
+Epoch 52, 52/100, training error: 0.284274, testing error: 13.239417
+Epoch 53, 53/100, training error: 0.284177, testing error: 7.432097
+Epoch 54, 54/100, training error: 0.283590, testing error: 5.876879
+Epoch 55, 55/100, training error: 0.283141, testing error: 4.279889
+Epoch 56, 56/100, training error: 0.283071, testing error: 7.511982
+Epoch 57, 57/100, training error: 0.282538, testing error: 7.217293
+Epoch 58, 58/100, training error: 0.282153, testing error: 3.046018
+Epoch 59, 59/100, training error: 0.281744, testing error: 6.049656
+Epoch 60, 60/100, training error: 0.281668, testing error: 5.043161
+Epoch 61, 61/100, training error: 0.281153, testing error: 3.850775
+Epoch 62, 62/100, training error: 0.280599, testing error: 2.694757
+Epoch 63, 63/100, training error: 0.280773, testing error: 5.500175
+Epoch 64, 64/100, training error: 0.280205, testing error: 4.391356
+Epoch 65, 65/100, training error: 0.279945, testing error: 2.909774
+Epoch 66, 66/100, training error: 0.279600, testing error: 4.663084
+Epoch 67, 67/100, training error: 0.279543, testing error: 4.718883
+Epoch 68, 68/100, training error: 0.279172, testing error: 4.282710
+Epoch 69, 69/100, training error: 0.278640, testing error: 3.267448
+Epoch 70, 70/100, training error: 0.278740, testing error: 2.679551
+Epoch 71, 71/100, training error: 0.278219, testing error: 2.675343
+Epoch 72, 72/100, training error: 0.278066, testing error: 3.323116
+Epoch 73, 73/100, training error: 0.277874, testing error: 2.946610
+Epoch 74, 74/100, training error: 0.277734, testing error: 4.329319
+Epoch 75, 75/100, training error: 0.277472, testing error: 3.688124
+Epoch 76, 76/100, training error: 0.276965, testing error: 2.871288
+Epoch 77, 77/100, training error: 0.277062, testing error: 1.674991
+Epoch 78, 78/100, training error: 0.276649, testing error: 2.741883
+Epoch 79, 79/100, training error: 0.276201, testing error: 1.842697
+Epoch 80, 80/100, training error: 0.276184, testing error: 1.878623
+Epoch 81, 81/100, training error: 0.275973, testing error: 3.286084
+Epoch 82, 82/100, training error: 0.275844, testing error: 2.490094
+Epoch 83, 83/100, training error: 0.275493, testing error: 1.905518
+Epoch 84, 84/100, training error: 0.275482, testing error: 2.354578
+Epoch 85, 85/100, training error: 0.275270, testing error: 1.349424
+Epoch 86, 86/100, training error: 0.274746, testing error: 1.145773
+Epoch 87, 87/100, training error: 0.274835, testing error: 1.644419
+Epoch 88, 88/100, training error: 0.274511, testing error: 1.733824
+Epoch 89, 89/100, training error: 0.274395, testing error: 1.712913
+Epoch 90, 90/100, training error: 0.274098, testing error: 1.489264
+Epoch 91, 91/100, training error: 0.274001, testing error: 1.287303
+Epoch 92, 92/100, training error: 0.273976, testing error: 1.884038
+Epoch 93, 93/100, training error: 0.273589, testing error: 1.219662
+Epoch 94, 94/100, training error: 0.273600, testing error: 1.346043
+Epoch 95, 95/100, training error: 0.273320, testing error: 1.533241
+Epoch 96, 96/100, training error: 0.273187, testing error: 1.573839
+Epoch 97, 97/100, training error: 0.272862, testing error: 1.456862
+Epoch 98, 98/100, training error: 0.272812, testing error: 1.433029
+Epoch 99, 99/100, training error: 0.272701, testing error: 1.757786
+Epoch 100, 100/100, training error: 0.272399, testing error: 1.228425
+Done
