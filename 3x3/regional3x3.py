@@ -109,9 +109,9 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # to sel
 
 #print('Done')
 
-restart=False
-init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
-nepochs=100
+restart=True #False
+init_epoch=int(sys.argv[2])#1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
+nepochs=100 - init_epoch + 1 # 100
 
 log_filename=f"./icml_train_ann-cnn_3x3_{sys.argv[1]}_regional_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 def write_log(*args):

@@ -1,0 +1,38 @@
+NGPUS = 1
+Dataset class defined
+train batch size = 40
+validation batch size = 40
+Region: 1andes
+Region: 1andes, y1=3, y2=21, x1=96, x2=113
+Region: 1andes, y1=3, y2=21, x1=96, x2=113
+setting num_workers=8 for data loading
+model1 created. 
+ --- model1 size: 43.37 MBs,
+ --- Num params: 11.351 mil. 
+launching cyclic schedule from 1e-5 to 1e-3 over 50 cycles
+Model created
+model1 created. 
+ --- model1 size: 43.37 MBs,
+ --- Num params: 11.351 mil. 
+Training...
+Reloading model and resuming training
+Epoch 83, 1/18, training error: 8.964467, testing error: 0.601820
+Epoch 84, 2/18, training error: 21.456501, testing error: 0.581122
+Epoch 85, 3/18, training error: 25.445105, testing error: 0.548896
+Epoch 86, 4/18, training error: 15.818711, testing error: 0.592481
+Epoch 87, 5/18, training error: 4.044197, testing error: 0.559773
+Epoch 88, 6/18, training error: 10673415168.000000, testing error: 9.507344
+Epoch 89, 7/18, training error: 147.479599, testing error: 4.974450
+Epoch 90, 8/18, training error: 838.285522, testing error: 4.680536
+Epoch 91, 9/18, training error: 83.308510, testing error: 3.163461
+Epoch 92, 10/18, training error: 52.654640, testing error: 2.226894
+Epoch 93, 11/18, training error: 37.174030, testing error: 1.810527
+Epoch 94, 12/18, training error: 28.470324, testing error: 1.427027
+Epoch 95, 13/18, training error: 27.481722, testing error: 1.137676
+Epoch 96, 14/18, training error: 19.625753, testing error: 0.893199
+Epoch 97, 15/18, training error: 24.183966, testing error: 0.830354
+Epoch 98, 16/18, training error: 14.083176, testing error: 0.824062
+Epoch 99, 17/18, training error: 11.621408, testing error: 0.926927
+Epoch 100, 18/18, training error: 10.832223, testing error: 0.637739
+Training Complete
+total_time=65271.31142449379

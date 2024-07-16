@@ -1,0 +1,79 @@
+NGPUS = 1
+Dataset class defined
+train batch size = 80
+validation batch size = 80
+Region: 1andes
+Region: 1andes, y1=3, y2=21, x1=96, x2=113
+Region: 1andes, y1=3, y2=21, x1=96, x2=113
+total_time=1.4754178524017334
+model1 created. 
+ --- model1 size: 24.26 MBs,
+ --- Num params: 6.349 mil. 
+Model created
+model1 created. 
+ --- model1 size: 24.26 MBs,
+ --- Num params: 6.349 mil. 
+Training...
+Reloading model and resuming training
+Epoch 41, 1/60, training error: 0.393301, testing error: 0.389643
+Epoch 42, 2/60, training error: 0.388030, testing error: 0.405240
+Epoch 43, 3/60, training error: 0.396095, testing error: 0.387611
+Epoch 44, 4/60, training error: 0.389233, testing error: 0.379835
+Epoch 45, 5/60, training error: 0.383184, testing error: 0.396099
+Epoch 46, 6/60, training error: 0.390568, testing error: 0.387669
+Epoch 47, 7/60, training error: 0.387666, testing error: 0.373562
+Epoch 48, 8/60, training error: 0.382887, testing error: 0.381748
+Epoch 49, 9/60, training error: 0.380459, testing error: 0.387435
+Epoch 50, 10/60, training error: 0.385052, testing error: 0.378366
+Epoch 51, 11/60, training error: 0.383384, testing error: 0.378809
+Epoch 52, 12/60, training error: 0.376475, testing error: 0.394202
+Epoch 53, 13/60, training error: 0.381564, testing error: 0.383418
+Epoch 54, 14/60, training error: 0.382456, testing error: 0.366648
+Epoch 55, 15/60, training error: 0.376227, testing error: 0.380281
+Epoch 56, 16/60, training error: 0.375595, testing error: 0.388567
+Epoch 57, 17/60, training error: 0.383904, testing error: 0.371439
+Epoch 58, 18/60, training error: 0.375830, testing error: 0.376734
+Epoch 59, 19/60, training error: 0.371818, testing error: 0.391073
+Epoch 60, 20/60, training error: 0.375869, testing error: 0.376370
+Epoch 61, 21/60, training error: 0.376894, testing error: 0.362721
+Epoch 62, 22/60, training error: 0.371486, testing error: 0.379838
+Epoch 63, 23/60, training error: 0.371265, testing error: 0.383465
+Epoch 64, 24/60, training error: 0.375256, testing error: 0.368270
+Epoch 65, 25/60, training error: 0.371865, testing error: 0.370535
+Epoch 66, 26/60, training error: 0.368003, testing error: 0.378512
+Epoch 67, 27/60, training error: 0.373216, testing error: 0.367960
+Epoch 68, 28/60, training error: 0.372107, testing error: 0.361771
+Epoch 69, 29/60, training error: 0.366487, testing error: 0.380523
+Epoch 70, 30/60, training error: 0.369431, testing error: 0.380976
+Epoch 71, 31/60, training error: 0.374882, testing error: 0.361809
+Epoch 72, 32/60, training error: 0.367576, testing error: 0.368806
+Epoch 73, 33/60, training error: 0.364957, testing error: 0.375012
+Epoch 74, 34/60, training error: 0.371703, testing error: 0.364485
+Epoch 75, 35/60, training error: 0.367495, testing error: 0.362518
+Epoch 76, 36/60, training error: 0.363479, testing error: 0.379249
+Epoch 77, 37/60, training error: 0.368698, testing error: 0.370677
+Epoch 78, 38/60, training error: 0.368386, testing error: 0.355816
+Epoch 79, 39/60, training error: 0.363847, testing error: 0.367493
+Epoch 80, 40/60, training error: 0.362245, testing error: 0.373062
+Epoch 81, 41/60, training error: 0.366986, testing error: 0.362664
+Epoch 82, 42/60, training error: 0.365310, testing error: 0.360041
+Epoch 83, 43/60, training error: 0.360247, testing error: 0.377527
+Epoch 84, 44/60, training error: 0.364473, testing error: 0.370724
+Epoch 85, 45/60, training error: 0.367497, testing error: 0.354894
+Epoch 86, 46/60, training error: 0.361173, testing error: 0.363949
+Epoch 87, 47/60, training error: 0.360451, testing error: 0.376718
+Epoch 88, 48/60, training error: 0.366054, testing error: 0.356428
+Epoch 89, 49/60, training error: 0.361496, testing error: 0.357442
+Epoch 90, 50/60, training error: 0.358028, testing error: 0.371785
+Epoch 91, 51/60, training error: 0.364214, testing error: 0.369741
+Epoch 92, 52/60, training error: 0.364601, testing error: 0.350958
+Epoch 93, 53/60, training error: 0.358674, testing error: 0.364242
+Epoch 94, 54/60, training error: 0.358098, testing error: 0.365268
+Epoch 95, 55/60, training error: 0.363776, testing error: 0.360569
+Epoch 96, 56/60, training error: 0.359357, testing error: 0.355622
+Epoch 97, 57/60, training error: 0.356177, testing error: 0.369291
+Epoch 98, 58/60, training error: 0.360854, testing error: 0.365598
+Epoch 99, 59/60, training error: 0.360647, testing error: 0.351721
+Epoch 100, 60/60, training error: 0.355402, testing error: 0.361904
+Training Complete
+total_time=381047.4022319317
