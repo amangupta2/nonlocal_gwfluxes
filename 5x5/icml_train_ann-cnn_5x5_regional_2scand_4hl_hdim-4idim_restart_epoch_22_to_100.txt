@@ -84,3 +84,15 @@ Epoch 87, 66/79, training error: 0.345558, testing error: 0.373625
 Epoch 88, 67/79, training error: 0.349050, testing error: 0.378149
 Epoch 89, 68/79, training error: 0.347459, testing error: 0.375678
 Epoch 90, 69/79, training error: 0.343575, testing error: 0.372138
+Epoch 91, 70/79, training error: 0.345954, testing error: 0.375863
+Epoch 92, 71/79, training error: 0.351644, testing error: 0.386784
+Epoch 93, 72/79, training error: 0.347333, testing error: 0.370715
+Epoch 94, 73/79, training error: 0.344646, testing error: 0.373206
+Epoch 95, 74/79, training error: 0.346801, testing error: 0.375942
+Epoch 96, 75/79, training error: 0.344883, testing error: 0.369873
+Epoch 97, 76/79, training error: 0.341153, testing error: 0.368602
+Epoch 98, 77/79, training error: 0.343240, testing error: 0.370982
+Epoch 99, 78/79, training error: 0.346295, testing error: 0.371481
+Epoch 100, 79/79, training error: 0.340416, testing error: 0.365773
+Training Complete
+total_time=506029.02603673935

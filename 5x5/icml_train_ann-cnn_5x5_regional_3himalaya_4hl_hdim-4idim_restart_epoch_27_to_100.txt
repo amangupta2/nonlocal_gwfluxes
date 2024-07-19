@@ -84,3 +84,10 @@ Epoch 92, 66/74, training error: 0.351178, testing error: 0.345802
 Epoch 93, 67/74, training error: 0.353700, testing error: 0.355380
 Epoch 94, 68/74, training error: 0.352239, testing error: 0.352595
 Epoch 95, 69/74, training error: 0.349237, testing error: 0.340482
+Epoch 96, 70/74, training error: 0.352144, testing error: 0.356879
+Epoch 97, 71/74, training error: 0.351780, testing error: 0.352675
+Epoch 98, 72/74, training error: 0.349028, testing error: 0.345075
+Epoch 99, 73/74, training error: 0.349619, testing error: 0.347101
+Epoch 100, 74/74, training error: 0.352415, testing error: 0.355727
+Training Complete
+total_time=470917.7749221325

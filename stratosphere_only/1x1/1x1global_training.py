@@ -106,9 +106,9 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # to sel
 
 restart=False
 init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
-nepochs=100
+nepochs=200
 
-log_filename=f"./ss_only_ann-cnn_1x1_global_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+log_filename=f"./ss_only_ann-cnn_1x1_global_uvthetaw_uwvw_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 #log_filename=f"./icml_train_ann-cnn_1x1_global_4hl_dropout0p1_hdim-2idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
@@ -193,7 +193,7 @@ test_files = [
 
 class Dataset(torch.utils.data.Dataset):
     
-    def __init__(self, files, domain, stencil, batch_size, manual_shuffle):
+    def __init__(self, files, domain, stencil, batch_size, manual_shuffle, region='1andes'):
 
         #super().__init__()
         
@@ -229,8 +229,9 @@ class Dataset(torch.utils.data.Dataset):
         #self.index = 0
 
         self.z1=0
-        self.z2=183 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
-        
+        self.z2=243 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
+        self.idim = self.z2 - self.z1 # overwrites the previous self.idim allocation
+ 
         # create permutations
         if self.manual_shuffle:
             self.seed  = 51
@@ -627,7 +628,7 @@ scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-3
 loss_fn    = nn.MSELoss()
 
 
-fac = torch.ones(122)#torch.from_numpy(rho[15:]**0.1)
+fac = torch.ones(60)#torch.from_numpy(rho[15:]**0.1)
 fac = (1./fac).to(torch.float32)
 fac=fac.to(device)
 
@@ -640,7 +641,7 @@ tstart=time2()
 
 #restart=True
 
-file_prefix = "torch_saved_models/stratosphere_only/1x1_era5_global_ann_cnn_uvtheta_uwvw_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss" 
+file_prefix = "torch_saved_models/stratosphere_only/1x1_era5_global_ann_cnn_uvthetaw_uwvw_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss" 
 if restart:
     idim    = trainset1.idim
     odim    = trainset1.odim
@@ -649,7 +650,8 @@ if restart:
     write_log(f'model1 created. \n --- model1 size: {model1.totalsize():.2f} MBs,\n --- Num params: {model1.totalparams()/10**6:.3f} mil. ')
     model1 = model1.to(device) # important to make this transfer before the optimizer step in the next line. Otherwise eror
     optim1     = optim.Adam(model1.parameters(),lr=1e-4)
-    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
+    # Aman: changed lrs from 1e-4, 1e-3 to 5e-5,5e-3
+    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=5e-5, max_lr=5e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
     PATH=f'/scratch/users/ag4680/{file_prefix}_train_epoch{init_epoch-1}.pt'
     checkpoint = torch.load(PATH)
     model1.load_state_dict(checkpoint['model_state_dict'])

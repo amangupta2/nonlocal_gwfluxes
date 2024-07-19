@@ -113,7 +113,7 @@ restart=False
 init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
 nepochs=100
 
-log_filename=f"./ss_only_ann-cnn_5x5_global_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+log_filename=f"./ss_only_ann-cnn_5x5_global_uvthetaw_uwvw_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
     log_file = open(log_filename,"a")
@@ -125,7 +125,7 @@ if device != "cpu":
     ngpus=torch.cuda.device_count()
     write_log(f"NGPUS = {ngpus}")
 
-write_log('In this Ablation study, multiple threads are used to make batches for global training. 10 CPUs are requested and 8 CPUs are used. Only the stratospheric data is used - which might not be the best choice since troposheric information is completely ignored - but it is a plausible test of nonlocal predictability in the stratosphere. To evaluate seasonal predictions, the full year 2015 is used a validation set, which is also good because 2015 had extreme winds in the stratosphere during DJF. Input set can be variable with this dataset. Right now only u,v,theta are input. Should extend it to include w and N2 later. Output is UW and VW.')
+write_log('In this Ablation study, multiple threads are used to make batches for global training. 10 CPUs are requested and 8 CPUs are used. Only the stratospheric data is used - which might not be the best choice since troposheric information is completely ignored - but it is a plausible test of nonlocal predictability in the stratosphere. To evaluate seasonal predictions, the full year 2015 is used a validation set, which is also good because 2015 had extreme winds in the stratosphere during DJF. Input set can be variable with this dataset. Right now only u,v,theta are input. Should extend it to include w and N2 later. Output is UW and VW. Stratospheric levels 1 hPa to 200 hPa, i.e. levels 15 to 74.')
 
 pre='/scratch/users/ag4680/training_data/era5/stratosphere_nonlocal_5x5_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
 train_files = [
@@ -233,7 +233,8 @@ class Dataset(torch.utils.data.Dataset):
         #self.index = 0
 	
         self.z1=0
-        self.z2=183 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
+        self.z2=243 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
+        self.idim = self.z2 - self.z1 # overwrites the previous self.idim allocation 
         
         # create permutations
         if self.manual_shuffle:
@@ -641,7 +642,7 @@ scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-3
 loss_fn    = nn.MSELoss()
 
 
-fac = torch.from_numpy(rho[15:]**0.1)
+fac = torch.from_numpy(rho[15:74]**0.1)
 fac = (1./fac).to(torch.float32)
 fac=fac.to(device)
 
@@ -655,7 +656,7 @@ tstart=time2()
 
 #restart=True
 
-file_prefix = "torch_saved_models/stratosphere_only/5x5_era5_global_ann_cnn_uvtheta_uwvw_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss" 
+file_prefix = "torch_saved_models/stratosphere_only/5x5_era5_global_ann_cnn_uvthetaw_uwvw_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss" 
 if restart:
     idim    = trainset1.idim
     odim    = trainset1.odim
@@ -664,7 +665,7 @@ if restart:
     write_log(f'model1 created. \n --- model1 size: {model1.totalsize():.2f} MBs,\n --- Num params: {model1.totalparams()/10**6:.3f} mil. ')
     model1 = model1.to(device) # important to make this transfer before the optimizer step in the next line. Otherwise eror
     optim1     = optim.Adam(model1.parameters(),lr=1e-4)
-    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
+    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=5e-5, max_lr=5e-3, step_size_up=50, step_size_down=50, cycle_momentum=False) # changed lrs from 1e-4 to 1e-3, to 5e-5 to 5e-3
     PATH=f'/scratch/users/ag4680/{file_prefix}_train_epoch{init_epoch-1}.pt'
     checkpoint = torch.load(PATH)
     model1.load_state_dict(checkpoint['model_state_dict'])

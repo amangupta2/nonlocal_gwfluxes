@@ -1,10 +1,10 @@
 #!/bin/bash
-#SBATCH --job-name=3_8
+#SBATCH --job-name=ssg_3x3
 #SBATCH --partition=serc
 #SBATCH -c 10
 #SBATCH -G 1
 #SBATCH --gpus-per-node=1
-#SBATCH --time=48:00:00
+#SBATCH --time=168:00:00
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --output=gpu_slurm-%j.out
 #SBATCH -C GPU_MEM:80GB
@@ -26,10 +26,10 @@
 # for more information on GPUs on sherlock: https://www.sherlock.stanford.edu/docs/user-guide/gpu/#gpu-types
 
 source /home/groups/aditis2/ag4680/miniconda3/etc/profile.d/conda.sh
-#conda activate jupyter_notebook
 conda activate siv2
 
-#python 3x3trainscript.py
+python 3x3global_training.py
 
 # 1andes, 2scand, 3himalaya, 4newfound, 5south_ocn, 6se_asia, 7natlantic, 8npacific
-python regional3x3.py 8npacific 59
+#python regional1x1.py 8npacific
+#python troposphere_regional1x1.py 1andes
