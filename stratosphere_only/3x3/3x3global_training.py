@@ -635,7 +635,7 @@ model1     = ANN_CNN(idim=idim,odim=odim,hdim=hdim,dropout=0.2, stencil=trainset
 model1 = model1.to(device)
 write_log(f'model1 created. \n --- model1 size: {model1.totalsize():.2f} MBs,\n --- Num params: {model1.totalparams()/10**6:.3f} mil. ')
 optim1     = optim.Adam(model1.parameters(),lr=1e-4)
-scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
+scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=5e-5, max_lr=2e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
 
 
 
@@ -667,7 +667,7 @@ if restart:
     write_log(f'model1 created. \n --- model1 size: {model1.totalsize():.2f} MBs,\n --- Num params: {model1.totalparams()/10**6:.3f} mil. ')
     model1 = model1.to(device) # important to make this transfer before the optimizer step in the next line. Otherwise eror
     optim1     = optim.Adam(model1.parameters(),lr=1e-4)
-    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=5e-5, max_lr=5e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
+    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=5e-5, max_lr=2e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
     PATH=f'/scratch/users/ag4680/{file_prefix}_train_epoch{init_epoch-1}.pt'
     checkpoint = torch.load(PATH)
     model1.load_state_dict(checkpoint['model_state_dict'])

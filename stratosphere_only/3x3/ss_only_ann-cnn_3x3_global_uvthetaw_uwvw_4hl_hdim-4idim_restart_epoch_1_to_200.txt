@@ -1,0 +1,44 @@
+NGPUS = 1
+In this Ablation study, multiple threads are used to make batches for global training. 10 CPUs are requested and 8 CPUs are used. Only the stratospheric data is used - which might not be the best choice since troposheric information is completely ignored - but it is a plausible test of nonlocal predictability in the stratosphere. To evaluate seasonal predictions, the full year 2015 is used a validation set, which is also good because 2015 had extreme winds in the stratosphere during DJF. Input set can be variable with this dataset. Right now only u,v,theta are input. Should extend it to include w and N2 later. Output is UW and VW. Stratospheric levels 1 hPa to 200 hPa, i.e. levels 15 to 74.
+Dataset class defined
+train batch size = 20
+validation batch size = 20
+Region: 1andes
+total_time=3.0556154251098633
+Input dim: 243, hidden dim: 972, output dim: 120
+model1 created. 
+ --- model1 size: 18.46 MBs,
+ --- Num params: 4.826 mil. 
+Model created
+Training...
+Epoch 1, 1/200, training error: 0.219720, testing error: 0.196138
+Epoch 2, 2/200, training error: 0.192809, testing error: 0.181985
+Epoch 3, 3/200, training error: 0.182193, testing error: 0.175498
+Epoch 4, 4/200, training error: 0.185893, testing error: 0.177422
+Epoch 5, 5/200, training error: 0.177259, testing error: 0.169837
+Epoch 6, 6/200, training error: 0.186927, testing error: 0.195962
+Epoch 7, 7/200, training error: 0.184164, testing error: 0.171117
+Epoch 8, 8/200, training error: 0.175008, testing error: 0.167693
+Epoch 9, 9/200, training error: 0.171155, testing error: 0.166815
+Epoch 10, 10/200, training error: 0.168533, testing error: 0.166618
+Epoch 11, 11/200, training error: 0.182056, testing error: 0.174373
+Epoch 12, 12/200, training error: 0.171328, testing error: 0.166084
+Epoch 13, 13/200, training error: 0.167665, testing error: 0.162032
+Epoch 14, 14/200, training error: 8.967174, testing error: 0.275793
+Epoch 15, 15/200, training error: 0.276146, testing error: 0.268701
+Epoch 16, 16/200, training error: 0.265415, testing error: 0.259560
+Epoch 17, 17/200, training error: 0.256791, testing error: 0.252292
+Epoch 18, 18/200, training error: 0.252782, testing error: 0.250847
+Epoch 19, 19/200, training error: 19.347473, testing error: 0.263320
+Epoch 20, 20/200, training error: 0.263299, testing error: 0.255926
+Epoch 21, 21/200, training error: 17369.027344, testing error: 0.255822
+Epoch 22, 22/200, training error: 0.743179, testing error: 0.256598
+Epoch 23, 23/200, training error: 0.259099, testing error: 0.254550
+Epoch 24, 24/200, training error: 0.254681, testing error: 0.252284
+Epoch 25, 25/200, training error: 553.787964, testing error: 0.264689
+Epoch 26, 26/200, training error: 0.273500, testing error: 0.258625
+Epoch 27, 27/200, training error: 0.263264, testing error: 0.255240
+Epoch 28, 28/200, training error: 0.259870, testing error: 0.253252
+Epoch 29, 29/200, training error: 0.267950, testing error: 0.256921
+Epoch 30, 30/200, training error: 0.263190, testing error: 0.253556
+Epoch 31, 31/200, training error: 0.255521, testing error: 0.253714

@@ -108,7 +108,7 @@ restart=False
 init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
 nepochs=200
 
-log_filename=f"./ss_only_ann-cnn_1x1_global_uvthetaw_uwvw_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+log_filename=f"./ss_only_ann-cnn_1x1_global_uvtheta_uwvw_ablation10hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 #log_filename=f"./icml_train_ann-cnn_1x1_global_4hl_dropout0p1_hdim-2idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
@@ -229,7 +229,7 @@ class Dataset(torch.utils.data.Dataset):
         #self.index = 0
 
         self.z1=0
-        self.z2=243 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
+        self.z2=183 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
         self.idim = self.z2 - self.z1 # overwrites the previous self.idim allocation
  
         # create permutations
@@ -420,29 +420,50 @@ class ANN_CNN(nn.Module):
         
         self.layer1 = nn.Linear(idim,hdim)#,dtype=torch.float16)
         self.act1    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
-        self.bnorm1   = nn.BatchNorm1d(hdim)
+#        self.bnorm1   = nn.BatchNorm1d(hdim)
         self.dropout1 = nn.Dropout(p=0.5*self.dropout_prob)
         self.layer2 = nn.Linear(hdim,hdim)
         self.act2    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
-        self.bnorm2   = nn.BatchNorm1d(hdim)
+#        self.bnorm2   = nn.BatchNorm1d(hdim)
         self.dropout2 = nn.Dropout(p=self.dropout_prob)
         self.layer3 = nn.Linear(hdim,hdim)
         self.act3    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
-        self.bnorm3   = nn.BatchNorm1d(hdim)
+#        self.bnorm3   = nn.BatchNorm1d(hdim)
         self.dropout3 = nn.Dropout(p=self.dropout_prob)
         self.layer4 = nn.Linear(hdim,hdim)
         self.act4    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
-        self.bnorm4   = nn.BatchNorm1d(2*hdim)
+#        self.bnorm4   = nn.BatchNorm1d(2*hdim)
         self.dropout4 = nn.Dropout(p=self.dropout_prob)
         self.layer5 = nn.Linear(hdim,hdim)
         self.act5    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
-        self.bnorm5   = nn.BatchNorm1d(hdim)
+#        self.bnorm5   = nn.BatchNorm1d(hdim)
         self.dropout5 = nn.Dropout(p=self.dropout_prob)
-        
-        self.layer6 = nn.Linear(hdim,2*odim)
+        self.layer6 = nn.Linear(hdim,hdim)
         self.act6    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
-        self.bnorm6   = nn.BatchNorm1d(2*odim)
+#        self.bnorm6   = nn.BatchNorm1d(hdim)
         self.dropout6 = nn.Dropout(p=self.dropout_prob)
+        self.layer7 = nn.Linear(hdim,hdim)
+        self.act7    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
+#        self.bnorm7   = nn.BatchNorm1d(hdim)
+        self.dropout7 = nn.Dropout(p=self.dropout_prob)
+        self.layer8 = nn.Linear(hdim,hdim)
+        self.act8    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
+#        self.bnorm8   = nn.BatchNorm1d(hdim)
+        self.dropout8 = nn.Dropout(p=self.dropout_prob)
+        self.layer9 = nn.Linear(hdim,hdim)
+        self.act9    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
+#        self.bnorm9   = nn.BatchNorm1d(hdim)
+        self.dropout9 = nn.Dropout(p=self.dropout_prob)
+        self.layer10 = nn.Linear(hdim,hdim)
+        self.act10    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
+#        self.bnorm10   = nn.BatchNorm1d(hdim)
+        self.dropout10 = nn.Dropout(p=self.dropout_prob)
+
+
+        self.layer11 = nn.Linear(hdim,2*odim)
+        self.act11    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
+#        self.bnorm11   = nn.BatchNorm1d(2*odim)
+        self.dropout11 = nn.Dropout(p=self.dropout_prob)
         
         self.output = nn.Linear(2*odim,odim) 
         
@@ -462,6 +483,11 @@ class ANN_CNN(nn.Module):
         x = self.dropout4(self.act4(self.layer4(x)))
         x = self.dropout5(self.act5(self.layer5(x)))
         x = self.dropout6(self.act6(self.layer6(x)))
+        x = self.dropout7(self.act7(self.layer7(x)))
+        x = self.dropout8(self.act8(self.layer8(x)))
+        x = self.dropout9(self.act9(self.layer9(x)))
+        x = self.dropout10(self.act10(self.layer10(x)))
+        x = self.dropout11(self.act11(self.layer11(x)))
         x = self.output(x)
         
         #x = self.dropout1(self.bnorm1(self.act1(self.layer1(x))))
@@ -641,7 +667,7 @@ tstart=time2()
 
 #restart=True
 
-file_prefix = "torch_saved_models/stratosphere_only/1x1_era5_global_ann_cnn_uvthetaw_uwvw_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss" 
+file_prefix = "torch_saved_models/stratosphere_only/ablation/1x1_era5_global_ann_cnn_uvtheta_uwvw_4idim_ablation10hl_leakyrelu_dropout0p2_cyclic_mseloss" 
 if restart:
     idim    = trainset1.idim
     odim    = trainset1.odim

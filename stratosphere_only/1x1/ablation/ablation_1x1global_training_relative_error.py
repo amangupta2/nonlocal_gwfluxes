@@ -108,7 +108,7 @@ restart=False
 init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
 nepochs=200
 
-log_filename=f"./ss_only_ann-cnn_1x1_global_uvthetaw_uwvw_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+log_filename=f"./ss_only_ann-cnn_1x1_global_uvtheta_uwvw_ablation_relativermse_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 #log_filename=f"./icml_train_ann-cnn_1x1_global_4hl_dropout0p1_hdim-2idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
@@ -229,7 +229,7 @@ class Dataset(torch.utils.data.Dataset):
         #self.index = 0
 
         self.z1=0
-        self.z2=243 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
+        self.z2=183 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
         self.idim = self.z2 - self.z1 # overwrites the previous self.idim allocation
  
         # create permutations
@@ -526,7 +526,7 @@ def training(nepochs,model,optimizer,loss_fn,trainloader,testloader,stencil, bs_
                 S = out.shape
                 out = out.reshape(S[0]*S[1],-1)
             pred   =model(inp)
-            loss     = loss_fn(pred,out)#loss_fn(pred*fac,out*fac) #+ weight_decay*l2_norm  #/fac) + 
+            loss     = loss_fn(1.,out/pred)#loss_fn(pred,out)#loss_fn(pred*fac,out*fac) #+ weight_decay*l2_norm  #/fac) + 
             optimizer.zero_grad() # flush the gradients from the last step and set to zeros, they accumulate otherwise
             # backward propagation
             loss.backward()
@@ -559,7 +559,7 @@ def training(nepochs,model,optimizer,loss_fn,trainloader,testloader,stencil, bs_
                 S = out.shape
                 out = out.reshape(S[0]*S[1],-1)
             pred   =model(inp)
-            loss2     = loss_fn(pred,out)
+            loss2     = loss_fn(1.,out/pred) #loss_fn(pred,out)
             testloss += loss2.item()
             count+=1
             
@@ -600,7 +600,7 @@ write_log(f'Region: {rgn}')
 # shuffle=False leads to much faster reading! Since 3x3 and 5x5 is slow, set this to False
 trainset1 = Dataset(files=train_files,domain='global', region=rgn, stencil=1, manual_shuffle=False, batch_size=bs_train)
 trainloader1 = torch.utils.data.DataLoader(trainset1, batch_size=bs_train,
-                                          drop_last=False, shuffle=False, num_workers=8)#, persistent_workers=True)
+
 
 testset1 = Dataset(files=test_files, domain='global', region=rgn, stencil=1, manual_shuffle=False, batch_size=bs_test)
 testloader1 = torch.utils.data.DataLoader(testset1, batch_size=bs_test,
@@ -621,7 +621,7 @@ model1     = ANN_CNN(idim=idim,odim=odim,hdim=hdim,dropout=0.2, stencil=trainset
 model1 = model1.to(device)
 write_log(f'model1 created. \n --- model1 size: {model1.totalsize():.2f} MBs,\n --- Num params: {model1.totalparams()/10**6:.3f} mil. ')
 optim1     = optim.Adam(model1.parameters(),lr=1e-4)
-scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=5e-5, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
+scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
 
 
 
@@ -641,7 +641,7 @@ tstart=time2()
 
 #restart=True
 
-file_prefix = "torch_saved_models/stratosphere_only/1x1_era5_global_ann_cnn_uvthetaw_uwvw_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss" 
+file_prefix = "torch_saved_models/stratosphere_only/1x1_era5_global_ann_cnn_uvtheta_uwvw_ablation_relativermse_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss" 
 if restart:
     idim    = trainset1.idim
     odim    = trainset1.odim
@@ -651,7 +651,7 @@ if restart:
     model1 = model1.to(device) # important to make this transfer before the optimizer step in the next line. Otherwise eror
     optim1     = optim.Adam(model1.parameters(),lr=1e-4)
     # Aman: changed lrs from 1e-4, 1e-3 to 5e-5,5e-3
-    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=5e-5, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
+    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
     PATH=f'/scratch/users/ag4680/{file_prefix}_train_epoch{init_epoch-1}.pt'
     checkpoint = torch.load(PATH)
     model1.load_state_dict(checkpoint['model_state_dict'])

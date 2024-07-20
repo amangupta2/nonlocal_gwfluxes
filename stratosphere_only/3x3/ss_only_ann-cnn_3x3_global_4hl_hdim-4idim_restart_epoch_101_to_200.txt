@@ -73,3 +73,10 @@ Epoch 155, 55/100, training error: 0.183251, testing error: 0.189747
 Epoch 156, 56/100, training error: 0.182898, testing error: 0.188015
 Epoch 157, 57/100, training error: 0.182909, testing error: 0.187706
 Epoch 158, 58/100, training error: 0.182727, testing error: 0.187652
+Epoch 159, 59/100, training error: 0.182973, testing error: 0.191310
+Epoch 160, 60/100, training error: 0.182739, testing error: 0.190000
+Epoch 161, 61/100, training error: 0.182473, testing error: 0.189212
+Epoch 162, 62/100, training error: 0.182434, testing error: 0.188449
+Epoch 163, 63/100, training error: 0.183085, testing error: 0.187711
+Epoch 164, 64/100, training error: 0.182262, testing error: 0.186981
+Epoch 165, 65/100, training error: 0.182260, testing error: 0.188406

@@ -108,7 +108,7 @@ restart=False
 init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
 nepochs=200
 
-log_filename=f"./ss_only_ann-cnn_1x1_global_uvthetaw_uwvw_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+log_filename=f"./ss_only_ann-cnn_1x1_global_uvtheta_uwvw_ablationrelu_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 #log_filename=f"./icml_train_ann-cnn_1x1_global_4hl_dropout0p1_hdim-2idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
@@ -229,7 +229,7 @@ class Dataset(torch.utils.data.Dataset):
         #self.index = 0
 
         self.z1=0
-        self.z2=243 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
+        self.z2=183 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
         self.idim = self.z2 - self.z1 # overwrites the previous self.idim allocation
  
         # create permutations
@@ -419,28 +419,28 @@ class ANN_CNN(nn.Module):
             self.dropout0 = nn.Dropout(p=0.5*self.dropout_prob)
         
         self.layer1 = nn.Linear(idim,hdim)#,dtype=torch.float16)
-        self.act1    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
+        self.act1    = nn.ReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
         self.bnorm1   = nn.BatchNorm1d(hdim)
         self.dropout1 = nn.Dropout(p=0.5*self.dropout_prob)
         self.layer2 = nn.Linear(hdim,hdim)
-        self.act2    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
+        self.act2    = nn.ReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
         self.bnorm2   = nn.BatchNorm1d(hdim)
         self.dropout2 = nn.Dropout(p=self.dropout_prob)
         self.layer3 = nn.Linear(hdim,hdim)
-        self.act3    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
+        self.act3    = nn.ReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
         self.bnorm3   = nn.BatchNorm1d(hdim)
         self.dropout3 = nn.Dropout(p=self.dropout_prob)
         self.layer4 = nn.Linear(hdim,hdim)
-        self.act4    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
+        self.act4    = nn.ReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
         self.bnorm4   = nn.BatchNorm1d(2*hdim)
         self.dropout4 = nn.Dropout(p=self.dropout_prob)
         self.layer5 = nn.Linear(hdim,hdim)
-        self.act5    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
+        self.act5    = nn.ReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
         self.bnorm5   = nn.BatchNorm1d(hdim)
         self.dropout5 = nn.Dropout(p=self.dropout_prob)
         
         self.layer6 = nn.Linear(hdim,2*odim)
-        self.act6    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
+        self.act6    = nn.ReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
         self.bnorm6   = nn.BatchNorm1d(2*odim)
         self.dropout6 = nn.Dropout(p=self.dropout_prob)
         
@@ -577,7 +577,7 @@ def training(nepochs,model,optimizer,loss_fn,trainloader,testloader,stencil, bs_
                 'loss': loss_fn,
                 'loss_train': LOSS_TRAIN,
                 'loss_test': LOSS_TEST,
-                'activation': 'LeakyRelu()',
+                'activation': 'Relu()',
                 'scheduler' : 'CyclicLR'
                 }, savepath)
         
@@ -621,7 +621,7 @@ model1     = ANN_CNN(idim=idim,odim=odim,hdim=hdim,dropout=0.2, stencil=trainset
 model1 = model1.to(device)
 write_log(f'model1 created. \n --- model1 size: {model1.totalsize():.2f} MBs,\n --- Num params: {model1.totalparams()/10**6:.3f} mil. ')
 optim1     = optim.Adam(model1.parameters(),lr=1e-4)
-scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=5e-5, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
+scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-5, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
 
 
 
@@ -641,7 +641,7 @@ tstart=time2()
 
 #restart=True
 
-file_prefix = "torch_saved_models/stratosphere_only/1x1_era5_global_ann_cnn_uvthetaw_uwvw_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss" 
+file_prefix = "torch_saved_models/stratosphere_only/1x1_era5_global_ann_cnn_uvthetaw_uwvw_4idim_4hl_ablationrelu_dropout0p2_cyclic_mseloss" 
 if restart:
     idim    = trainset1.idim
     odim    = trainset1.odim
@@ -651,7 +651,7 @@ if restart:
     model1 = model1.to(device) # important to make this transfer before the optimizer step in the next line. Otherwise eror
     optim1     = optim.Adam(model1.parameters(),lr=1e-4)
     # Aman: changed lrs from 1e-4, 1e-3 to 5e-5,5e-3
-    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=5e-5, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
+    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-5, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
     PATH=f'/scratch/users/ag4680/{file_prefix}_train_epoch{init_epoch-1}.pt'
     checkpoint = torch.load(PATH)
     model1.load_state_dict(checkpoint['model_state_dict'])

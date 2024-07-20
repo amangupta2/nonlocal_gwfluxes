@@ -1,3 +1,5 @@
+# regional (8x8): 100 epochs with 8 workers in 24 hours - with 6 layers. With 10 layers it can take longer.
+# ICML
 import math
 import numpy as np
 #from matplotlib import pyplot as plt
@@ -94,6 +96,7 @@ class AGD:
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # to select all available GPUs
 
+
 #device="cpu"
 #device = torch.device("cuda:1,3" if torch.cuda.is_available() else "cpu") # select the second and fourth GPU
 #device="cpu"           
@@ -104,12 +107,13 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # to sel
 
 #torch.cuda.set_device(4) 
 
+#print('Done')
+
 restart=False
 init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
-nepochs=200
+nepochs=100
 
-log_filename=f"./ss_only_ann-cnn_1x1_global_uvthetaw_uwvw_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
-#log_filename=f"./icml_train_ann-cnn_1x1_global_4hl_dropout0p1_hdim-2idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+log_filename=f"./ss_only_ann-cnn_5x5_global_uvtheta_uwvw_ablation_2cnnlayers_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
     log_file = open(log_filename,"a")
@@ -119,15 +123,14 @@ def write_log(*args):
 
 if device != "cpu":
     ngpus=torch.cuda.device_count()
-    print(f"NGPUS = {ngpus}")
+    write_log(f"NGPUS = {ngpus}")
 
-write_log('In this Ablation study, multiple threads are used to make batches for global training. 10 CPUs are requested and 8 CPUs are used. Only the stratospheric data is used - which might not be the best choice since troposheric information is completely ignored - but it is a plausible test of nonlocal predictability in the stratosphere. To evaluate seasonal predictions, the full year 2015 is used a validation set, which is also good because 2015 had extreme winds in the stratosphere during DJF. Input set can be variable with this dataset. Right now only u,v,theta are input. Should extend it to include w and N2 later. Output is UW and VW.')
+write_log('In this ablation study of the stratosphere only ablation study, the 5x5 CNN is broken down into 2 3x3 layers.')
 
-# redone files 2 - with constant scaling - larger collection
-pre='/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
+pre='/scratch/users/ag4680/training_data/era5/stratosphere_nonlocal_5x5_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
 train_files = [
     pre+'2010_constant_mu_sigma_scaling01.nc',
-    pre+'2010_constant_mu_sigma_scaling02.nc', 
+    pre+'2010_constant_mu_sigma_scaling02.nc',
     pre+'2010_constant_mu_sigma_scaling03.nc',
     pre+'2010_constant_mu_sigma_scaling04.nc',
     pre+'2010_constant_mu_sigma_scaling05.nc',
@@ -162,7 +165,7 @@ train_files = [
     pre+'2014_constant_mu_sigma_scaling10.nc',
     pre+'2014_constant_mu_sigma_scaling11.nc',
     pre+'2014_constant_mu_sigma_scaling12.nc'
-            ]       
+            ]
 
 # May 2015 is kept as an out-of-set test. Consistent with validation set of Attention U-Net
 test_files = [
@@ -177,10 +180,10 @@ test_files = [
     pre+'2015_constant_mu_sigma_scaling10.nc',
     pre+'2015_constant_mu_sigma_scaling11.nc',
     pre+'2015_constant_mu_sigma_scaling12.nc'
-         ]
-
+         ] 
 
 # final out of set testing on May 2015
+
 
 
 # Customized Dataloader - good for loading batches from:
@@ -223,15 +226,16 @@ class Dataset(torch.utils.data.Dataset):
         
         self.bs = batch_size
         self.domain=domain # acceptable values: singlepoint, regional, global
+        self.region=region
         self.stencil=stencil # for nonlocal training
         self.fac = int(self.stencil/2.)
         self.manual_shuffle=manual_shuffle
         #self.index = 0
-
+	
         self.z1=0
         self.z2=243 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
-        self.idim = self.z2 - self.z1 # overwrites the previous self.idim allocation
- 
+        self.idim = self.z2 - self.z1 # overwrites the previous self.idim allocation 
+        
         # create permutations
         if self.manual_shuffle:
             self.seed  = 51
@@ -246,6 +250,7 @@ class Dataset(torch.utils.data.Dataset):
             #self.y2 = 18
             #self.x1 = 98
             #self.x2 = 106
+            # which region?
             if self.region == '1andes':
                 self.y1=3
                 self.y2=21
@@ -311,12 +316,11 @@ class Dataset(torch.utils.data.Dataset):
                 I = torch.from_numpy(self.inp[it,self.z1:self.z2,self.y0-self.fac:self.y0+self.fac+1,self.x0-self.fac:self.x0+self.fac+1].data.compute())
                 O = torch.from_numpy(self.out[it,self.z1:self.z2,self.y0,self.x0].data.compute())
                 return I,O 
-
         elif self.domain == 'regional':
             
             if self.stencil == 1:
-                I = torch.from_numpy(self.inp[it,self.z1:self.z2,y1:y2,x1:x2].data.compute())
-                O = torch.from_numpy(self.out[it,self.z1:self.z2,y1:y2,x1:x2].data.compute())
+                I = torch.from_numpy(self.inp[it,self.z1:self.z2,self.y1:self.y2,self.x1:self.x2].data.compute())
+                O = torch.from_numpy(self.out[it,self.z1:self.z2,self.y1:self.y2,self.x1:self.x2].data.compute())
                 
                 #print(I.shape)
                 #print(O.shape)
@@ -325,13 +329,10 @@ class Dataset(torch.utils.data.Dataset):
                 O = torch.permute(O, (1,2,0))
                 S = I.shape
                 I = I.reshape(S[0]*S[1], -1)
-                S = O.shape
                 O = O.reshape(S[0]*S[1], -1)
-
+                
                 return I,O 
-
             else:
-
                 # (time x pressure x lat x lon x st x st)
                 # convolution layer will be applied on the last two dimensions
                 I = torch.from_numpy(self.inp[it,self.z1:self.z2,self.y1:self.y2,self.x1:self.x2,:,:].data.compute())
@@ -345,9 +346,8 @@ class Dataset(torch.utils.data.Dataset):
                 O = O.reshape(S[0]*S[1], -1)
 
                 return I,O
- 
+            
         elif self.domain == 'global':
-
             if self.stencil == 1:
                 I = torch.from_numpy(self.inp[it,self.z1:self.z2,:,:].data.compute())
                 O = torch.from_numpy(self.out[it,self.z1:self.z2,:,:].data.compute())
@@ -363,7 +363,6 @@ class Dataset(torch.utils.data.Dataset):
                 O = O.reshape(S[0]*S[1], -1)
                 
                 return I,O 
-
             else:
                 # (time x pressure x lat x lon x st x st)
                 # convolution layer will be applied on the last two dimensions
@@ -376,7 +375,7 @@ class Dataset(torch.utils.data.Dataset):
                 I = I.reshape(S[0]*S[1], S[2], S[3], S[4])
                 S = O.shape
                 O = O.reshape(S[0]*S[1], -1)
-                
+
                 return I,O 
             
             
@@ -387,7 +386,7 @@ class Dataset(torch.utils.data.Dataset):
     def return_ds(self):
         return self.ds
 
-write_log('Done')
+write_log('Dataset class defined')
 
 class ANN_CNN(nn.Module):
     
@@ -406,13 +405,23 @@ class ANN_CNN(nn.Module):
         # ADD fac number of 3x3 CNN layers 
         # Either apply a 3x3, 5x5, 7x7 CNN layer, or apply multiple 3x3 layers
         if self.fac == 1:
-            self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=self.stencil, stride=1, padding=0)
+            self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=3, stride=1, padding=0)
             self.act_cnn = nn.ReLU()
             self.dropout0 = nn.Dropout(p=0.5*self.dropout_prob)
+            write_log('CNN 1')
+            self.conv2 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=3, stride=1, padding=0)
+            self.act_cnn2 = nn.ReLU()
+            self.dropout0_2 = nn.Dropout(p=0.5*self.dropout_prob)
+            write_log('CNN 2')
         elif self.fac == 2:
-            self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=self.stencil, stride=1, padding=0)
+            self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=3, stride=1, padding=0)
             self.act_cnn = nn.ReLU()
             self.dropout0 = nn.Dropout(p=0.5*self.dropout_prob)
+            write_log('-CNN 1')
+            self.conv2 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=3, stride=1, padding=0)
+            self.act_cnn2 = nn.ReLU()
+            self.dropout0_2 = nn.Dropout(p=0.5*self.dropout_prob)
+            write_log('-CNN 2')
         elif self.fac == 3:
             self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=self.stencil, stride=1, padding=0)
             self.act_cnn = nn.ReLU()
@@ -449,7 +458,9 @@ class ANN_CNN(nn.Module):
     def forward(self, x):
         
         if self.fac >= 1:
+            #x = torch.squeeze( self.dropout0(self.act_cnn(self.conv1(x))) )
             x = torch.squeeze( self.dropout0(self.act_cnn(self.conv1(x))) )
+            x = torch.squeeze( self.dropout0_2(self.act_cnn2(self.conv2(x))) )
             
         #elif fac == 2:
         #    x = self.conv1(x)
@@ -503,10 +514,15 @@ class ANN_CNN(nn.Module):
 
 def training(nepochs,model,optimizer,loss_fn,trainloader,testloader,stencil, bs_train,bs_test,save,
              file_prefix, init_epoch=1, scheduler=0):
+
+    #print(f'=== {stencil}')
+    if init_epoch > 1:
+        write_log('Reloading model and resuming training')
+    print_time = 0
     
     LOSS_TRAIN = np.zeros((nepochs))
     LOSS_TEST   = np.zeros((nepochs))
-    
+
     for epoch in np.arange(init_epoch + 0, init_epoch + nepochs):
         # --------- training ----------
         model.train()
@@ -525,13 +541,16 @@ def training(nepochs,model,optimizer,loss_fn,trainloader,testloader,stencil, bs_
                 inp = inp.reshape(S[0]*S[1],S[2],S[3], S[4])
                 S = out.shape
                 out = out.reshape(S[0]*S[1],-1)
-            pred   =model(inp)
+
+            #write_log(f'in -{inp.shape}')
+            #write_log(f'out-{out.shape}')
+                
+            pred   =model(inp)#.cuda())
             loss     = loss_fn(pred,out)#loss_fn(pred*fac,out*fac) #+ weight_decay*l2_norm  #/fac) + 
             optimizer.zero_grad() # flush the gradients from the last step and set to zeros, they accumulate otherwise
             # backward propagation
             loss.backward()
             # parameter update step
-            #print('5')
             optimizer.step()
             if scheduler !=0:
                 scheduler.step()
@@ -542,7 +561,6 @@ def training(nepochs,model,optimizer,loss_fn,trainloader,testloader,stencil, bs_
                 
         # --------- testing ------------
         model.eval()
-        #print('===== TESTING ============')
         testloss=0.
         count=0.
         for i, (inp, out) in enumerate(testloader):
@@ -552,12 +570,16 @@ def training(nepochs,model,optimizer,loss_fn,trainloader,testloader,stencil, bs_
                 S = inp.shape
                 inp = inp.reshape(S[0]*S[1],S[2])
                 S = out.shape
-                out = out.reshape(S[0]*S[1],-1)
+                out = out.reshape(S[0]*S[1],S[2])
             elif stencil > 1:
                 S = inp.shape
                 inp = inp.reshape(S[0]*S[1],S[2],S[3], S[4])
                 S = out.shape
                 out = out.reshape(S[0]*S[1],-1)
+
+            #write_log((f'in -{inp.shape}')
+            #write_log((f'out-{out.shape}')
+
             pred   =model(inp)
             loss2     = loss_fn(pred,out)
             testloss += loss2.item()
@@ -584,33 +606,37 @@ def training(nepochs,model,optimizer,loss_fn,trainloader,testloader,stencil, bs_
     return model, LOSS_TRAIN, LOSS_TEST#, EVOLVE
 
 
+
 # setting Shuffle=True automatically takes care of permuting in time - but not control over seeding, so...
 # set manual_shuffle=True and control seed from the function definition
 
 # multiple batches from the vectorized matrices
-bs_train=80#40#37
-bs_test=80#40#37
+bs_train=20#40#40#37
+bs_test=20#40#40#37
 # Can have multiple timesteps onto GPU per time step, 
+write_log(f'train batch size = {bs_train}')
+write_log(f'validation batch size = {bs_test}')
 
-# ============================= 1x1 ===========================
+# ============================= 5x5 ===========================
 tstart=time2()
-
+# ID REGIONAL, SPECIFY THE REGION AS WELL
+# 1andes, 2scand, 3himalaya, 4newfound, 5south_ocn, 6se_asia, 7natlantic, 8npacific
 rgn='1andes'
 write_log(f'Region: {rgn}')
 # shuffle=False leads to much faster reading! Since 3x3 and 5x5 is slow, set this to False
-trainset1 = Dataset(files=train_files,domain='global', region=rgn, stencil=1, manual_shuffle=False, batch_size=bs_train)
-trainloader1 = torch.utils.data.DataLoader(trainset1, batch_size=bs_train,
+trainset1 = Dataset(files=train_files,domain='global', region=rgn, stencil=5, manual_shuffle=False, batch_size=bs_train)
+trainloader1 = torch.utils.data.DataLoader(trainset1, batch_size=bs_train, 
                                           drop_last=False, shuffle=False, num_workers=8)#, persistent_workers=True)
 
-testset1 = Dataset(files=test_files, domain='global', region=rgn, stencil=1, manual_shuffle=False, batch_size=bs_test)
-testloader1 = torch.utils.data.DataLoader(testset1, batch_size=bs_test,
+testset1 = Dataset(files=test_files, domain='global', region=rgn, stencil=5, manual_shuffle=False, batch_size=bs_test)
+testloader1 = torch.utils.data.DataLoader(testset1, batch_size=bs_test, 
                                          drop_last=False, shuffle=False, num_workers=8)#, persistent_workers=True)
 
 tend=time2()
 write_log(f'total_time={tend-tstart}')
 
 
-# ================ 1x1 model ======================================================
+# ================ 5x5 model ======================================================
 idim    = trainset1.idim
 odim    = trainset1.odim
 hdim    = 4*idim
@@ -621,19 +647,20 @@ model1     = ANN_CNN(idim=idim,odim=odim,hdim=hdim,dropout=0.2, stencil=trainset
 model1 = model1.to(device)
 write_log(f'model1 created. \n --- model1 size: {model1.totalsize():.2f} MBs,\n --- Num params: {model1.totalparams()/10**6:.3f} mil. ')
 optim1     = optim.Adam(model1.parameters(),lr=1e-4)
-scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=5e-5, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
+scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
 
 
 
 loss_fn    = nn.MSELoss()
 
 
-fac = torch.ones(60)#torch.from_numpy(rho[15:]**0.1)
+fac = torch.from_numpy(rho[15:74]**0.1)
 fac = (1./fac).to(torch.float32)
 fac=fac.to(device)
 
 
-print('Model created')
+write_log('Model created')
+
 
 
 # new - with restart functionality
@@ -641,7 +668,7 @@ tstart=time2()
 
 #restart=True
 
-file_prefix = "torch_saved_models/stratosphere_only/1x1_era5_global_ann_cnn_uvthetaw_uwvw_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss" 
+file_prefix = "torch_saved_models/stratosphere_only/ablation/5x5_era5_global_ann_cnn_uvtheta_uwvw_ablation_2cnnlayers_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss" 
 if restart:
     idim    = trainset1.idim
     odim    = trainset1.odim
@@ -650,8 +677,7 @@ if restart:
     write_log(f'model1 created. \n --- model1 size: {model1.totalsize():.2f} MBs,\n --- Num params: {model1.totalparams()/10**6:.3f} mil. ')
     model1 = model1.to(device) # important to make this transfer before the optimizer step in the next line. Otherwise eror
     optim1     = optim.Adam(model1.parameters(),lr=1e-4)
-    # Aman: changed lrs from 1e-4, 1e-3 to 5e-5,5e-3
-    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=5e-5, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
+    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False) # changed lrs from 1e-4 to 1e-3, to 5e-5 to 5e-3
     PATH=f'/scratch/users/ag4680/{file_prefix}_train_epoch{init_epoch-1}.pt'
     checkpoint = torch.load(PATH)
     model1.load_state_dict(checkpoint['model_state_dict'])
@@ -673,6 +699,6 @@ model1, loss_train1, loss_val1 = training(nepochs=nepochs, init_epoch=init_epoch
                                 file_prefix=file_prefix, 
                                 scheduler=scheduler1
                                )
-write_log('Done')
+write_log('Training Complete')
 tend=time2()
-print(f'total_time={tend-tstart}')
+write_log(f'total_time={tend-tstart}')
