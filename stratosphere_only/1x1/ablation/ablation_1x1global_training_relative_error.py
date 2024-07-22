@@ -526,7 +526,8 @@ def training(nepochs,model,optimizer,loss_fn,trainloader,testloader,stencil, bs_
                 S = out.shape
                 out = out.reshape(S[0]*S[1],-1)
             pred   =model(inp)
-            loss     = loss_fn(1.,out/pred)#loss_fn(pred,out)#loss_fn(pred*fac,out*fac) #+ weight_decay*l2_norm  #/fac) + 
+           
+            loss     = loss_fn(torch.ones(out.shape).to(device),out/pred)#loss_fn(pred,out)#loss_fn(pred*fac,out*fac) #+ weight_decay*l2_norm  #/fac) + 
             optimizer.zero_grad() # flush the gradients from the last step and set to zeros, they accumulate otherwise
             # backward propagation
             loss.backward()
@@ -559,7 +560,7 @@ def training(nepochs,model,optimizer,loss_fn,trainloader,testloader,stencil, bs_
                 S = out.shape
                 out = out.reshape(S[0]*S[1],-1)
             pred   =model(inp)
-            loss2     = loss_fn(1.,out/pred) #loss_fn(pred,out)
+            loss2     = loss_fn(torch.ones(out.shape).to(device),out/pred) #loss_fn(pred,out)
             testloss += loss2.item()
             count+=1
             
@@ -599,8 +600,7 @@ rgn='1andes'
 write_log(f'Region: {rgn}')
 # shuffle=False leads to much faster reading! Since 3x3 and 5x5 is slow, set this to False
 trainset1 = Dataset(files=train_files,domain='global', region=rgn, stencil=1, manual_shuffle=False, batch_size=bs_train)
-trainloader1 = torch.utils.data.DataLoader(trainset1, batch_size=bs_train,
-
+trainloader1 = torch.utils.data.DataLoader(trainset1, batch_size=bs_train, drop_last=False, shuffle=False, num_workers=8)
 
 testset1 = Dataset(files=test_files, domain='global', region=rgn, stencil=1, manual_shuffle=False, batch_size=bs_test)
 testloader1 = torch.utils.data.DataLoader(testset1, batch_size=bs_test,

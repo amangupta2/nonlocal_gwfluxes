@@ -108,11 +108,11 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # to sel
 
 #print('Done')
 
-restart=True
-init_epoch=51 # which epoch to resume from. Should have restart file from init_epoch-1 ready
-nepochs=50
+restart=False
+init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
+nepochs=100
 
-log_filename=f"./icml_train_ann-cnn_5x5_global_4hl_hdim-2idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+log_filename=f"./icml_train_ann-cnn_5x5_two3x3cnns_global_4hl_hdim-2idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
     log_file = open(log_filename,"a")
@@ -123,6 +123,8 @@ def write_log(*args):
 if device != "cpu":
     ngpus=torch.cuda.device_count()
     write_log(f"NGPUS = {ngpus}")
+
+write_log('Breaking down the single 5x5 layer into 2 3x3 layers following the stratosphere only ablation study with u,v,theta,w. This should lead to a better performance for 5x5 than 3x3, as one would intuitively expect.')
 
 pref='nonlocal_5x5_'
 # redone files 2 - with constant scaling - larger collection
@@ -415,18 +417,28 @@ class ANN_CNN(nn.Module):
         # ADD fac number of 3x3 CNN layers 
         # Either apply a 3x3, 5x5, 7x7 CNN layer, or apply multiple 3x3 layers
         if self.fac == 1:
-            self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=self.stencil, stride=1, padding=0)
+            self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=3, stride=1, padding=0)
             self.act_cnn = nn.ReLU()
             self.dropout0 = nn.Dropout(p=0.5*self.dropout_prob)
+            write_log('CNN 1')
+            self.conv2 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=3, stride=1, padding=0)
+            self.act_cnn2 = nn.ReLU()
+            self.dropout0_2 = nn.Dropout(p=0.5*self.dropout_prob)
+            write_log('CNN 2')
         elif self.fac == 2:
-            self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=self.stencil, stride=1, padding=0)
+            self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=3, stride=1, padding=0)
             self.act_cnn = nn.ReLU()
             self.dropout0 = nn.Dropout(p=0.5*self.dropout_prob)
+            write_log('-CNN 1')
+            self.conv2 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=3, stride=1, padding=0)
+            self.act_cnn2 = nn.ReLU()
+            self.dropout0_2 = nn.Dropout(p=0.5*self.dropout_prob)
+            write_log('-CNN 2')
         elif self.fac == 3:
             self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=self.stencil, stride=1, padding=0)
             self.act_cnn = nn.ReLU()
-            self.dropout0 = nn.Dropout(p=0.5*self.dropout_prob)
-        
+            self.dropout0 = nn.Dropout(p=0.5*self.dropout_prob)       
+ 
         self.layer1 = nn.Linear(idim,hdim)#,dtype=torch.float16)
         self.act1    = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
         self.bnorm1   = nn.BatchNorm1d(hdim)
@@ -458,7 +470,9 @@ class ANN_CNN(nn.Module):
     def forward(self, x):
         
         if self.fac >= 1:
+            #x = torch.squeeze( self.dropout0(self.act_cnn(self.conv1(x))) )
             x = torch.squeeze( self.dropout0(self.act_cnn(self.conv1(x))) )
+            x = torch.squeeze( self.dropout0_2(self.act_cnn2(self.conv2(x))) )
             
         #elif fac == 2:
         #    x = self.conv1(x)
@@ -666,7 +680,7 @@ tstart=time2()
 
 #restart=True
 
-file_prefix = "torch_saved_models/icml_global/5x5_era5_global_ann_cnn_leakyrelu_dropout0p1_cyclic_mseloss"
+file_prefix = "torch_saved_models/icml_global/5x5_two3x3cnns_era5_global_ann_cnn_leakyrelu_dropout0p1_cyclic_mseloss"
 write_log(f'File prefix: {file_prefix}') 
 #nepochs=50 #30
 if restart:

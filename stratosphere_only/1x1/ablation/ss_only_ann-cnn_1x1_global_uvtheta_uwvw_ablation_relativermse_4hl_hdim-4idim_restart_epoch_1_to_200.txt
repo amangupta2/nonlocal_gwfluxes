@@ -1,17 +1,15 @@
 In this Ablation study, multiple threads are used to make batches for global training. 10 CPUs are requested and 8 CPUs are used. Only the stratospheric data is used - which might not be the best choice since troposheric information is completely ignored - but it is a plausible test of nonlocal predictability in the stratosphere. To evaluate seasonal predictions, the full year 2015 is used a validation set, which is also good because 2015 had extreme winds in the stratosphere during DJF. Input set can be variable with this dataset. Right now only u,v,theta are input. Should extend it to include w and N2 later. Output is UW and VW.
 Done
 Region: 1andes
-total_time=1.375641107559204
-Input dim: 243, hidden dim: 972, output dim: 120
+total_time=1.5478508472442627
+Input dim: 183, hidden dim: 732, output dim: 120
 model1 created. 
- --- model1 size: 16.43 MBs,
- --- Num params: 4.295 mil. 
+ --- model1 size: 9.55 MBs,
+ --- Num params: 2.495 mil. 
 Training...
-Epoch 1, 1/200, training error: 0.252861, testing error: 0.240993
-Epoch 2, 2/200, training error: 0.233205, testing error: 0.235342
-Epoch 3, 3/200, training error: 0.227511, testing error: 0.226062
-Epoch 4, 4/200, training error: 0.222776, testing error: 0.219072
-Epoch 5, 5/200, training error: 0.219336, testing error: 0.221964
-Epoch 6, 6/200, training error: 135.018448, testing error: 0.290421
-Epoch 7, 7/200, training error: 0.603618, testing error: 0.288204
-Epoch 8, 8/200, training error: 0.469820, testing error: 0.285815
+Epoch 1, 1/200, training error: nan, testing error: nan
+Epoch 2, 2/200, training error: nan, testing error: nan
+Epoch 3, 3/200, training error: nan, testing error: nan
+Epoch 4, 4/200, training error: nan, testing error: nan
+Epoch 5, 5/200, training error: nan, testing error: nan
+Epoch 6, 6/200, training error: nan, testing error: nan

@@ -1,0 +1,5 @@
+Key takeaways from the ablation runs:
+
+
+1) a 5x5 filter led to degradation of performance compared to 3x3. Does breaking down the 5x5 to 2 3x3 filters lead to a better performance?
+Bravo, much better performance, much better R2. Although, found halfway that it uses 4 features: u,v,theta, and w

@@ -233,7 +233,7 @@ class Dataset(torch.utils.data.Dataset):
         #self.index = 0
 	
         self.z1=0
-        self.z2=243 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
+        self.z2=183 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
         self.idim = self.z2 - self.z1 # overwrites the previous self.idim allocation 
         
         # create permutations

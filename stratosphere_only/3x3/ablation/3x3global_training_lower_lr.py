@@ -111,9 +111,9 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # to sel
 
 restart=False
 init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
-nepochs=200
+nepochs=100
 
-log_filename=f"./ss_only_ann-cnn_3x3_global_uvtheta_uwvw_ablation_2cnnlayers_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+log_filename=f"./ss_only_ann-cnn_3x3_global_uvthetaw_uwvw_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
     log_file = open(log_filename,"a")
@@ -125,8 +125,7 @@ if device != "cpu":
     ngpus=torch.cuda.device_count()
     write_log(f"NGPUS = {ngpus}")
 
-write_log('In this Ablation study, multiple threads are used to make batches for global training. 10 CPUs are requested and 8 CPUs are used. Only the stratospheric data is used - which might not be the best choice since troposheric information is completely ignored - but it is a plausible test of nonlocal predictability in the stratosphere. To evaluate seasonal predictions, the full year 2015 is used a validation set, which is also good because 2015 had extreme winds in the stratosphere during DJF. Input set can be variable with this dataset. Right now only u,v,theta are input. Should extend it to include w and N2 later. Output is UW and VW. Stratospheric levels 1 hPa to 200 hPa, i.e. levels 15 to 74.')
-
+write_log('Reducing the learning rate a bit for idim=243, from 2e-3 to 1e-3. Overwriting the previous runs.')
 pre='/scratch/users/ag4680/training_data/era5/stratosphere_nonlocal_3x3_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
 train_files = [
     pre+'2010_constant_mu_sigma_scaling01.nc',
@@ -233,7 +232,7 @@ class Dataset(torch.utils.data.Dataset):
         #self.index = 0
 
         self.z1=0
-        self.z2=183 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
+        self.z2=243 # for u_v_theta, 243 for u_v_theta_w, 303 for u_v_theta_w_N2
         self.idim = self.z2 - self.z1 # overwrites the previous self.idim allocation
     
         # create permutations
@@ -656,7 +655,7 @@ tstart=time2()
 
 #restart=True
 
-file_prefix = "torch_saved_models/stratosphere_only/ablation/3x3_era5_global_ann_cnn_uvtheta_uwvw_ablation_2cnnlayers_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss"
+file_prefix = "torch_saved_models/stratosphere_only/3x3_era5_global_ann_cnn_uvthetaw_uwvw_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss"
 if restart:
     #init_epoch = 9 # epoch to start new training from, reading from (epoch-1) file
     
