@@ -1,16 +1,3 @@
-NGPUS = 1
-In this Ablation study, multiple threads are used to make batches for global training. 10 CPUs are requested and 8 CPUs are used. Only the stratospheric data is used - which might not be the best choice since troposheric information is completely ignored - but it is a plausible test of nonlocal predictability in the stratosphere. To evaluate seasonal predictions, the full year 2015 is used a validation set, which is also good because 2015 had extreme winds in the stratosphere during DJF. Input set can be variable with this dataset. Right now only u,v,theta are input. Should extend it to include w and N2 later. Output is UW and VW. Stratospheric levels 1 hPa to 200 hPa, i.e. levels 15 to 74.
-Dataset class defined
-train batch size = 20
-validation batch size = 20
-Region: 1andes
-total_time=2.360301971435547
-Input dim: 183, hidden dim: 732, output dim: 120
-model1 created. 
- --- model1 size: 10.70 MBs,
- --- Num params: 2.797 mil. 
-Model created
-Training...
 Epoch 1, 1/100, training error: 0.245600, testing error: 0.245606
 Epoch 2, 2/100, training error: 0.237936, testing error: 0.243407
 Epoch 3, 3/100, training error: 0.235759, testing error: 0.242732
@@ -111,5 +98,3 @@ Epoch 97, 97/100, training error: 0.187832, testing error: 0.192272
 Epoch 98, 98/100, training error: 0.187719, testing error: 0.191217
 Epoch 99, 99/100, training error: 0.187176, testing error: 0.190597
 Epoch 100, 100/100, training error: 0.186417, testing error: 0.189392
-Training Complete
-total_time=171334.7225637436

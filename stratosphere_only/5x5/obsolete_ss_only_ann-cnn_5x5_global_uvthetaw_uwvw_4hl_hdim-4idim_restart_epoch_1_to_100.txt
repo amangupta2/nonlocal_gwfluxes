@@ -53,3 +53,4 @@ Epoch 39, 39/100, training error: 0.375671, testing error: 0.280518
 Epoch 40, 40/100, training error: 0.369894, testing error: 0.280681
 Epoch 41, 41/100, training error: 0.304976, testing error: 0.280251
 Epoch 42, 42/100, training error: 0.292253, testing error: 0.280430
+Epoch 43, 43/100, training error: 0.284037, testing error: 0.280294

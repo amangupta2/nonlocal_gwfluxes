@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=5x5_2cnn4V
+#SBATCH --job-name=5x5_2cnn
 #SBATCH --partition=serc
 #SBATCH -c 10
 #SBATCH -G 1
@@ -28,9 +28,8 @@
 source /home/groups/aditis2/ag4680/miniconda3/etc/profile.d/conda.sh
 conda activate siv2
 
-#python 5x5global_training_ablation_2cnnlayers.py
-python 5x5global_training_ablation_2cnnlayers_uvthetaw.py
-
+python 5x5global_training_ablation_2cnnlayers.py
+#python 5x5global_training_ablation_2cnnlayers_uvthetaw.py
 # 1andes, 2scand, 3himalaya, 4newfound, 5south_ocn, 6se_asia, 7natlantic, 8npacific
 #python regional1x1.py 8npacific
 #python troposphere_regional1x1.py 1andes

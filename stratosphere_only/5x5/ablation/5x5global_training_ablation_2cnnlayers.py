@@ -109,9 +109,9 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # to sel
 
 #print('Done')
 
-restart=False
-init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
-nepochs=100
+restart=True
+init_epoch=63 # which epoch to resume from. Should have restart file from init_epoch-1 ready
+nepochs=38
 
 log_filename=f"./ss_only_ann-cnn_5x5_global_uvtheta_uwvw_ablation_2cnnlayers_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 def write_log(*args):
@@ -677,7 +677,7 @@ if restart:
     write_log(f'model1 created. \n --- model1 size: {model1.totalsize():.2f} MBs,\n --- Num params: {model1.totalparams()/10**6:.3f} mil. ')
     model1 = model1.to(device) # important to make this transfer before the optimizer step in the next line. Otherwise eror
     optim1     = optim.Adam(model1.parameters(),lr=1e-4)
-    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False) # changed lrs from 1e-4 to 1e-3, to 5e-5 to 5e-3
+    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-4, step_size_up=50, step_size_down=50, cycle_momentum=False) # changed lrs from 1e-4 to 1e-3, to 5e-5 to 5e-3
     PATH=f'/scratch/users/ag4680/{file_prefix}_train_epoch{init_epoch-1}.pt'
     checkpoint = torch.load(PATH)
     model1.load_state_dict(checkpoint['model_state_dict'])

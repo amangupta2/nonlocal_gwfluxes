@@ -1,0 +1,71 @@
+NGPUS = 1
+Breaking down the single 5x5 layer into 2 3x3 layers following the stratosphere only ablation study with u,v,theta,w. This should lead to a better performance for 5x5 than 3x3, as one would intuitively expect.
+Dataset class defined
+train batch size = 10
+validation batch size = 10
+Region: 1andes
+total_time=2.158398389816284
+-CNN 1
+-CNN 2
+model1 created. 
+ --- model1 size: 20.62 MBs,
+ --- Num params: 5.396 mil. 
+Model created
+File prefix: torch_saved_models/icml_global/5x5_two3x3cnns_era5_global_ann_cnn_leakyrelu_dropout0p1_cyclic_mseloss
+Training...
+Epoch 1, 1/100, training error: 0.347100, testing error: 0.325992
+Epoch 2, 2/100, training error: 0.313919, testing error: 0.307610
+Epoch 3, 3/100, training error: 0.300719, testing error: 0.292246
+Epoch 4, 4/100, training error: 0.293860, testing error: 0.286704
+Epoch 5, 5/100, training error: 0.289398, testing error: 0.285270
+Epoch 6, 6/100, training error: 0.286022, testing error: 0.277541
+Epoch 7, 7/100, training error: 0.283477, testing error: 0.275368
+Epoch 8, 8/100, training error: 0.281417, testing error: 0.276836
+Epoch 9, 9/100, training error: 0.279666, testing error: 0.271527
+Epoch 10, 10/100, training error: 0.278352, testing error: 0.269030
+Epoch 11, 11/100, training error: 0.276977, testing error: 0.272387
+Epoch 12, 12/100, training error: 0.275853, testing error: 0.268269
+Epoch 13, 13/100, training error: 0.274894, testing error: 0.265600
+Epoch 14, 14/100, training error: 0.274021, testing error: 0.268911
+Epoch 15, 15/100, training error: 0.273206, testing error: 0.265754
+Epoch 16, 16/100, training error: 0.272490, testing error: 0.262937
+Epoch 17, 17/100, training error: 0.271807, testing error: 0.264801
+Epoch 18, 18/100, training error: 0.275939, testing error: 0.267399
+Epoch 19, 19/100, training error: 0.273422, testing error: 0.263000
+Epoch 20, 20/100, training error: 0.270916, testing error: 0.263220
+Epoch 21, 21/100, training error: 0.269971, testing error: 0.264011
+Epoch 22, 22/100, training error: 0.269358, testing error: 0.260384
+Epoch 23, 23/100, training error: 0.268832, testing error: 0.262263
+Epoch 24, 24/100, training error: 0.268347, testing error: 0.263140
+Epoch 25, 25/100, training error: 0.267855, testing error: 0.259646
+Epoch 26, 26/100, training error: 0.267479, testing error: 0.261761
+Epoch 27, 27/100, training error: 0.267060, testing error: 0.261865
+Epoch 28, 28/100, training error: 0.266637, testing error: 0.258927
+Epoch 29, 29/100, training error: 0.266304, testing error: 0.260132
+Epoch 30, 30/100, training error: 0.265933, testing error: 0.260875
+Epoch 31, 31/100, training error: 0.271477, testing error: 0.260621
+Epoch 32, 32/100, training error: 0.266576, testing error: 0.259853
+Epoch 33, 33/100, training error: 0.265415, testing error: 0.260149
+Epoch 34, 34/100, training error: 0.264795, testing error: 0.259508
+Epoch 35, 35/100, training error: 0.264399, testing error: 0.258120
+Epoch 36, 36/100, training error: 0.264130, testing error: 0.260427
+Epoch 37, 37/100, training error: 0.263811, testing error: 0.259564
+Epoch 38, 38/100, training error: 0.263530, testing error: 0.259064
+Epoch 39, 39/100, training error: 0.263302, testing error: 0.260560
+Epoch 40, 40/100, training error: 0.263046, testing error: 0.260152
+Epoch 41, 41/100, training error: 0.262789, testing error: 0.258794
+Epoch 42, 42/100, training error: 0.262559, testing error: 0.260660
+Epoch 43, 43/100, training error: 0.262422, testing error: 0.261062
+Epoch 44, 44/100, training error: 0.262132, testing error: 0.258675
+Epoch 45, 45/100, training error: 0.261940, testing error: 0.259828
+Epoch 46, 46/100, training error: 0.261766, testing error: 0.260820
+Epoch 47, 47/100, training error: 0.261546, testing error: 0.258974
+Epoch 48, 48/100, training error: 0.261387, testing error: 0.258837
+Epoch 49, 49/100, training error: 0.261974, testing error: 0.261064
+Epoch 50, 50/100, training error: 0.261263, testing error: 0.259254
+Epoch 51, 51/100, training error: 0.261131, testing error: 0.259559
+Epoch 52, 52/100, training error: 0.260947, testing error: 0.261205
+Epoch 53, 53/100, training error: 0.260760, testing error: 0.260399
+Epoch 54, 54/100, training error: 0.260636, testing error: 0.260108
+Epoch 55, 55/100, training error: 0.260482, testing error: 0.261049
+Epoch 56, 56/100, training error: 0.260327, testing error: 0.260922
