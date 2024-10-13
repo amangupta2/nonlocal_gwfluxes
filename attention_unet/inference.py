@@ -1,4 +1,4 @@
-# Run this inference script after training
+# Inference script for DETERMINISTIC inference on Attention UNet models
 # header
 import numpy as np
 import xarray as xr
@@ -27,7 +27,7 @@ bs_test=bs_train
 domain='global' # 'regional'
 vertical=sys.argv[1] #'stratosphere_only' # 'global'
 features=sys.argv[2] #'uvthetaw' # 'uvtheta', ''uvthetaw', or 'uvw' for troposphere | additionally 'uvthetaN2' and 'uvthetawN2' for stratosphere_only
-dropout=0.03 # can choose this to be non-zero during inference for uncertainty quantification. A little dropout goes a long way. Choose a small value - 0.03ish?
+dropout=0 # can choose this to be non-zero during inference for uncertainty quantification. A little dropout goes a long way. Choose a small value - 0.03ish?
 epoch=int(sys.argv[3])
 
 # model checkpoint
@@ -49,6 +49,8 @@ if device != "cpu":
     write_log(f"NGPUS = {ngpus}")
 
 # Define test files
+
+# ------- To test on one year of ERA5 data
 test_files=[]
 test_years  = np.array([2015])
 test_month = int(sys.argv[4]) #np.arange(1,13)
@@ -60,6 +62,9 @@ elif vertical == 'global':
 for year in test_years:
     for months in np.arange(test_month,test_month+1):
         test_files.append(f'{pre}{year}_constant_mu_sigma_scaling{str(months).zfill(2)}.nc')
+
+# -------- To test on three months of IFS data
+test_files=['/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/stratosphere_only_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc']
 write_log(f'Inference the Attention UNet model on {domain} horizontal and {vertical} vertical model, with features {features} and dropout={dropout}.')
 write_log(f'Test files = {test_files}')
 
@@ -91,7 +96,8 @@ model.eval()
 # create netCDF file
 S=ckpt.split('.')
 if dropout==0:
-    out=f'/scratch/users/ag4680/gw_inference_ncfiles/inference_{S[0]}_{test_years[0]}_{test_month}.nc'
+    #out=f'/scratch/users/ag4680/gw_inference_ncfiles/inference_{S[0]}_{test_years[0]}_{test_month}.nc'
+    out=f'/scratch/users/ag4680/gw_inference_ncfiles/inference_{S[0]}_{test_years[0]}_{test_month}_testedonIFS.nc'
 else:
     out=f'/scratch/users/ag4680/gw_inference_ncfiles/inference_{S[0]}_{test_years[0]}_{test_month}_dropoutON_{sys.argv[5]}.nc'
 write_log(f'Output NC file: {out}')

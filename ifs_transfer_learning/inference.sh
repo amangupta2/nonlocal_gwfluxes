@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=inferIFS
+#SBATCH --job-name=TLINFER
 #SBATCH --partition=serc
 #SBATCH -c 10
 #SBATCH -G 1
@@ -23,21 +23,12 @@
 source /home/groups/aditis2/ag4680/miniconda3/etc/profile.d/conda.sh
 conda activate siv2
 
-# 'global'/'stratosphere_only' and 'feature_set'
+# 'attention/ann' 'global'(horizontal) 'global'/'stratosphere_only'(vertical) and 'feature_set', 'CHECKPOINT_EPOCH'
 # TRAINING
-#python training_attention_unet.py global uvthetaw
+python attn_inference.py attention global stratosphere_only uvtheta 100
+python attn_inference.py attention global stratosphere_only uvthetaw 100
 
 
-
-
-
-# INFERENCE
-# Most optimal epochs to use for respective configs
-# stratosphere_only | uvtheta  | epoch=100 | month
-# stratosphere_only | uvthetaw | epoch=100 | month
-# Usage: python inference.py <vertical> <features> <epoch> <month>
-python probabilistic_inference.py stratosphere_only uvthetaw 100 $month 1
-python probabilistic_inference.py stratosphere_only uvtheta 100 $month 1
 
 
 

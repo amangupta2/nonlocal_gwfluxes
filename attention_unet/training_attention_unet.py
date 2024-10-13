@@ -14,9 +14,9 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.distributed as dist
 import torch.multiprocessing as mp
 
-from dataloader_attention_unet import Dataset
+from dataloader_attention_unet import Dataset_AttentionUNet
 from model_attention_unet import Attention_UNet 
-from function_training import training_aunet
+from function_training import Training_AttentionUNet
 
 f='/home/users/ag4680/myjupyter/137levs_ak_bk.npz'
 data=np.load(f,mmap_mode='r')
@@ -101,10 +101,10 @@ write_log('Defined input files')
 
 
 # create dataloaders
-trainset    = Dataset(files=train_files,domain=domain, vertical=vertical, manual_shuffle=False, features=features)
+trainset    = Dataset_AttentionUNet(files=train_files,domain=domain, vertical=vertical, manual_shuffle=False, features=features)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=bs_train, 
                                           drop_last=False, shuffle=False, num_workers=8) # change this before job submission
-testset     = Dataset(files=test_files,domain=domain, vertical=vertical, manual_shuffle=False, features=features)
+testset     = Dataset_AttentionUNet(files=test_files,domain=domain, vertical=vertical, manual_shuffle=False, features=features)
 testloader = torch.utils.data.DataLoader(testset, batch_size=bs_train, 
                                           drop_last=False, shuffle=False, num_workers=8) # change this before job submission
 
@@ -114,6 +114,8 @@ ch_in  = trainset.idim
 ch_out = trainset.odim
 
 model = Attention_UNet(ch_in=ch_in, ch_out=ch_out, dropout=dropout)
+# port model to GPU. ensures optimizer is loaded to GPU as well
+model = model.to(device)
 write_log(f'Model created. \n --- model size: {model.totalsize():.2f} MBs,\n --- Num params: {model.totalparams()/10**6:.3f} mil. ')
 
 optimizer     = optim.Adam(model.parameters(),lr=1e-4)
@@ -132,11 +134,9 @@ if restart:
     #epoch = checkpoint['epoch']
     loss_fn  = checkpoint['loss']
 
-# port model to GPU
-model = model.to(device)
 
 # train
-model, loss_train, loss_test= training_aunet(nepochs=nepochs, init_epoch=1,
+model, loss_train, loss_test= Training_AttentionUNet(nepochs=nepochs, init_epoch=1,
                                              model=model,optimizer=optimizer,loss_fn=loss_fn,
                                              trainloader=trainloader,testloader=testloader, 
                                              bs_train=bs_train,bs_test=bs_test,

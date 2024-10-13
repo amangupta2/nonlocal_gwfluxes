@@ -10,7 +10,7 @@ import torch
 #import torch.optim as optim
 
 
-class Dataset(torch.utils.data.Dataset):
+class Dataset_AttentionUNet(torch.utils.data.Dataset):
 
     def __init__(self, files, domain, vertical, manual_shuffle, features, region='1andes'):
         # domain = regional or global

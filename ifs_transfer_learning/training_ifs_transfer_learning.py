@@ -5,6 +5,7 @@
 # Train
 # How to get more high-res data?
 
+import sys
 import math
 import numpy as np
 #from matplotlib import pyplot as plt
@@ -13,7 +14,7 @@ import numpy as np
 from time import time as time2
 import xarray as xr
 #import dask
-from files import train_files, test_files
+#from files import train_files, test_files
 
 #%matplotlib inline
 import torch
@@ -33,8 +34,8 @@ import pandas as pd
 
 from dataloader_definition import Dataset_ANN_CNN, Dataset_AttentionUNet
 from model_definition import ANN_CNN, Attention_UNet
-from function_training import Training_ANN_CNN, Training_AttentionUNet
-
+from function_training import Training_ANN_CNN_TransferLearning, Training_AttentionUNet_TransferLearning, Model_Freeze_Transfer_Learning
+#from files import train_files, test_files
 
 torch.set_printoptions(edgeitems=2)
 torch.manual_seed(123)
@@ -61,38 +62,39 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # to sel
 
 
 # PARAMETERS AND HYPERPARAMETERS
-model_type='attention' # or 'ann'
+model_type=sys.argv[1] #'attention' # or 'ann'
 init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
 nepochs=100
 # ----------------------
-features='uvtheta'
+features=sys.argv[4]#'uvtheta'
 stencil=1 # only relevant if model_type='ann'
 # ----------------------
-vertical='global' # or 'stratosphere_only'
-domain='global' # 'regional'. Most likely won't set regional for these experiments. The functions might not be constructed to handle them properly
+domain=sys.argv[2] #global' # 'regional'. Most likely won't set regional for these experiments. The functions might not be constructed to handle them properly
+vertical=sys.argv[3] #'global' # or 'stratosphere_only'
 # ----------------------
 lr_min = 1e-4
 lr_max = 9e-4
 # ----------------------
 dropout=0
-if model_type='ann':
+ckpt_epoch=sys.argv[5]
+if model_type=='ann':
     PATH=f'/scratch/users/ag4680/torch_saved_models/stratosphere_only/{stencil}x{stencil}_era5_global_ann_cnn_{features}_uwvw_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss_train_epoch4.pt'
-elif model_type='attention':
-   PATH='/scratch/users/ag4680/torch_saved_models/attention_unet/attnunet_era5_global_stratosphere_only_uvtheta_mseloss_train_epoch100.pt'
+elif model_type=='attention':
+    PATH=f'/scratch/users/ag4680/torch_saved_models/attention_unet/attnunet_era5_{domain}_{vertical}_{features}_mseloss_train_epoch{ckpt_epoch}.pt'
 
 if model_type=='attention':
     stencil=1
 
 if vertical == 'global':
     if model_type=='ann':
-        log_filename=f"./transferIFS_global_ann_{stencil}x{stencil}_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+        log_filename=f"./IFStransfer_global_ann_{stencil}x{stencil}_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
     elif model_type=='attention':
-        log_filename=f"./transferIFS_global_attention_{features}_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+        log_filename=f"./IFStransfer_global_attention_{features}_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 elif vertical == 'stratosphere_only':
     if model_type=='ann':
-        log_filename=f"./transferIFS_ss_only_{stencil}x{stencil}_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
-    elif model_type=='attention'
-        log_filename=f"./transferIFS_ss_only_attention_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+        log_filename=f"./IFStransfer_ss_only_{stencil}x{stencil}_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+    elif model_type=='attention':
+        log_filename=f"./IFStransfer_ss_only_attention_{features}_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
@@ -103,7 +105,7 @@ def write_log(*args):
 
 if device != "cpu":
     ngpus=torch.cuda.device_count()
-    print(f"NGPUS = {ngpus}")
+    write_log(f"NGPUS = {ngpus}")
 
 if model_type=='ann':
     write_log(f'Transfer learning: retraining ERA5 trained ANN-CNNs with stencil {stencil}x{stencil}, vertical={vertical}, horizontal={domain} model with features {features}. CyclicLR scheduler to cycle learning rates between lr_min={lr_min} to lr_max={lr_max}.')
@@ -116,7 +118,7 @@ elif model_type=='attention':
 if vertical == 'global':
     f=f'/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/troposphere_and_stratosphere_{stencil}x{stencil}_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc'
 elif vertical == 'stratosphere_only':
-    f=f'/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/stratosphere_only_{stencil}x{stencil}_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc'
+    f=f'/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/stratosphere_only_{stencil}x{stencil}_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc'
 write_log(f'File name: {f}')
 train_files=[f]
 test_files=[f]
@@ -167,7 +169,7 @@ elif model_type=='attention':
     trainset    = Dataset_AttentionUNet(files=train_files,domain=domain, vertical=vertical, features=features, manual_shuffle=False)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=bs_train,
                                           drop_last=False, shuffle=False, num_workers=8)#, persistent_workers=True)
-    testset = Dataset_AttentionUNet(files=test_files, domain='global', stencil=stencil, manual_shuffle=False)
+    testset = Dataset_AttentionUNet(files=test_files, domain='global', vertical=vertical, features=features, manual_shuffle=False)
     testloader = torch.utils.data.DataLoader(testset, batch_size=bs_test,
                                          drop_last=False, shuffle=False, num_workers=8)#, persistent_workers=True)
     idim    = trainset.idim
@@ -175,58 +177,49 @@ elif model_type=='attention':
 
 
 # lr 10-6 to 10-4 over 100 up and 100 down steps works well waise
+# Important note: The optimizer is loaded on to the same device at the model. So best to first define the model and port to the GPU, and then define the optimizer.
+# Otherwise, will have to port both the model and optimizer onto the device at the end, to prevent device mismatch error
 if model_type=='ann':
 
     model     = ANN_CNN(idim=idim, odim=odim, hdim=hdim, dropout=dropout, stencil=trainset.stencil)
+    model     = model.to(device)
     optimizer     = optim.Adam(model.parameters(),lr=1e-4)
     scheduler     = torch.optim.lr_scheduler.CyclicLR(optimizer, base_lr=lr_min, max_lr=lr_max, step_size_up=10, step_size_down=10, cycle_momentum=False) # since low IFS data, step size is small=10
     loss_fn       = nn.MSELoss()
 
     # Load model checkpoint
-    if device=='cpu':
-        checkpoint=torch.load(PATH, map_location=torch.device('cpu'))
-    elif:
-        checkpoint=torch.load(PATH)
+    #if device=='cpu':
+    #    checkpoint=torch.load(PATH, map_location=torch.device('cpu'))
+    #else:
+    #    checkpoint=torch.load(PATH)
+    checkpoint=torch.load(PATH, map_location=torch.device(device))
     model.load_state_dict(checkpoint['model_state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
     scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer, base_lr=lr_min, max_lr=lr_max, step_size_up=10, step_size_down=10, cycle_momentum=False)
 
-    # Freeze weights
-    #for params in model.parameters():
-    #    params.requires_grad=False
-    # Activate last layer
-    #model.output.weight.requires_grad = True
-    #model.output.bias.requires_grad   = True
-
-if model_type='attention':
+if model_type=='attention':
     # ADD THIS
-    model    = Attention_UNet(idim=idim, odim=odim, dropout=dropout)
+    model    = Attention_UNet(ch_in=idim, ch_out=odim, dropout=dropout)
+    model    = model.to(device)
     optimizer     = optim.Adam(model.parameters(),lr=1e-4)
     scheduler     = torch.optim.lr_scheduler.CyclicLR(optimizer, base_lr=lr_min, max_lr=lr_max, step_size_up=10, step_size_down=10, cycle_momentum=False) # since low IFS data, step size is small=10
     loss_fn       = nn.MSELoss()
     
     # Load model checkpoint
-    if device=='cpu':
-        checkpoint=torch.load(PATH, map_location=torch.device('cpu'))
-    elif:
-        checkpoint=torch.load(PATH)
+    #if device=='cpu':
+    #    checkpoint=torch.load(PATH, map_location=torch.device('cpu'))
+    #else:
+    #    checkpoint=torch.load(PATH)
+    checkpoint=torch.load(PATH, map_location=torch.device(device))
     model.load_state_dict(checkpoint['model_state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
     scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer, base_lr=lr_min, max_lr=lr_max, step_size_up=10, step_size_down=10, cycle_momentum=False)
     
-    model = model_freeze_transfer_learning(model=model, model_type=model_type)
-
-    # Freeze weights
-    #for params in model.parameters():
-    #    params.requires_grad=False
-    # Activate last layer
-    #model.conv1x1.weight.requires_grad = True
-    #model.conv1x1.bias.requires_grad   = True
+model = Model_Freeze_Transfer_Learning(model=model, model_type=model_type)
 
 
 for params in model.parameters():
         write_log(f'{params.requires_grad}')
-model=model.to(device)
 
 write_log(f'model loaded \n --- model size: {model.totalsize():.2f} MBs,\n --- Num params: {model.totalparams()/10**6:.3f} mil. ')
 write_log('Model checkpoint loaded and prepared for re-training')
