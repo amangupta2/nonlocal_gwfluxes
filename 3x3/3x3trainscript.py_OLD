@@ -1,11 +1,15 @@
-# regional (8x8): 100 epochs with 8 workers in 24 hours - with 6 layers.
+# regional (8x8): 100 epochs with 8 workers in 24 hours - with 6 layers. With 10 layers it can take longer.
 # ICML
 import math
 import numpy as np
 #from matplotlib import pyplot as plt
 from netCDF4 import Dataset
+#import pygrib as pg
 from time import time as time2
 import xarray as xr
+#import dask
+
+#%matplotlib inline
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -35,7 +39,56 @@ R=287.05
 T=250
 rho = 100*lev/(R*T)
 
-# torch.cuda.is_available() checks and returns True if a GPU is available, else it'll return False
+# === Automatic Gradient Descent ===
+from torch.nn.init import orthogonal_
+
+def singular_value(p):
+    sv = math.sqrt(p.shape[0]/p.shape[1])
+    if p.dim() == 4:
+        sv /= math.sqrt(p.shape[2]*p.shape[3])
+    return sv
+
+class AGD:
+    @torch.no_grad()
+    def __init__(self, model, gain=1.0):
+        
+        self.model   = model
+        self.depth   = 0
+        for p in model.parameters():
+            if p.dim() == 2:
+                self.depth += 1
+        self.gain  = gain
+        
+        for p in model.parameters():
+            #if p.dim() == 1:   
+            if p.dim() == 2: 
+                orthogonal_(p)
+                p *= singular_value(p)
+            if p.dim() == 4:
+                for kx in range(p.shape[2]):
+                    for ky in range(p.shape[3]):
+                        orthogonal_(p[:,:,kx,ky])
+                        p *= singular_value(p)
+
+    
+    @torch.no_grad()
+    def step(self):
+        
+        G = 0
+        for p in self.model.parameters():
+            if p.dim() == 2:
+                G += singular_value(p)*p.grad.norm(dim=(0,1)).sum()
+        G /= self.depth
+        
+        log = math.log(0.5*(1 + math.sqrt( 1 + 4*G)))
+        
+        for p in self.model.parameters():
+            if p.dim() == 2:
+                factor = singular_value(p) / p.grad.norm(dim=(0,1), keepdim=True)
+                p -= self.gain * log/self.depth * factor * p.grad
+
+
+                # torch.cuda.is_available() checks and returns True if a GPU is available, else it'll return False
 
                 
 # https://stackoverflow.com/questions/54216920/how-to-use-multiple-gpus-in-pytorch
@@ -54,11 +107,13 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # to sel
 
 #torch.cuda.set_device(4) 
 
+#print('Done')
+
 restart=False
 init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
-nepochs=100
+nepochs=60
 
-log_filename=f"./ss_only_ann-cnn_5x5_global_uvw_uwvw_ablation_2cnnlayers_4hl_hdim-4idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+log_filename=f"./icml_train_ann-cnn_3x3_global_4hl_hdim-2idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
     log_file = open(log_filename,"a")
@@ -70,64 +125,84 @@ if device != "cpu":
     ngpus=torch.cuda.device_count()
     write_log(f"NGPUS = {ngpus}")
 
-write_log('Ablation study - testing u,v,w as a feature set. Sticking to two 3x3 filters instead of 1 5x5 filter now.')
+stencil=3
 
-pre='/scratch/users/ag4680/training_data/era5/stratosphere_nonlocal_5x5_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
+pref=f'nonlocal_{stencil}xstencil_'
+# redone files 2 - with constant scaling - larger collection
 train_files = [
-    pre+'2010_constant_mu_sigma_scaling01.nc',
-    pre+'2010_constant_mu_sigma_scaling02.nc',
-    pre+'2010_constant_mu_sigma_scaling03.nc',
-    pre+'2010_constant_mu_sigma_scaling04.nc',
-    pre+'2010_constant_mu_sigma_scaling05.nc',
-    pre+'2010_constant_mu_sigma_scaling06.nc',
-    pre+'2010_constant_mu_sigma_scaling07.nc',
-    pre+'2010_constant_mu_sigma_scaling08.nc',
-    pre+'2010_constant_mu_sigma_scaling09.nc',
-    pre+'2010_constant_mu_sigma_scaling10.nc',
-    pre+'2010_constant_mu_sigma_scaling11.nc',
-    pre+'2010_constant_mu_sigma_scaling12.nc',
-    pre+'2012_constant_mu_sigma_scaling01.nc',
-    pre+'2012_constant_mu_sigma_scaling02.nc',
-    pre+'2012_constant_mu_sigma_scaling03.nc',
-    pre+'2012_constant_mu_sigma_scaling04.nc',
-    pre+'2012_constant_mu_sigma_scaling05.nc',
-    pre+'2012_constant_mu_sigma_scaling06.nc',
-    pre+'2012_constant_mu_sigma_scaling07.nc',
-    pre+'2012_constant_mu_sigma_scaling08.nc',
-    pre+'2012_constant_mu_sigma_scaling09.nc',
-    pre+'2012_constant_mu_sigma_scaling10.nc',
-    pre+'2012_constant_mu_sigma_scaling11.nc',
-    pre+'2012_constant_mu_sigma_scaling12.nc',
-    pre+'2014_constant_mu_sigma_scaling01.nc',
-    pre+'2014_constant_mu_sigma_scaling02.nc',
-    pre+'2014_constant_mu_sigma_scaling03.nc',
-    pre+'2014_constant_mu_sigma_scaling04.nc',
-    pre+'2014_constant_mu_sigma_scaling05.nc',
-    pre+'2014_constant_mu_sigma_scaling06.nc',
-    pre+'2014_constant_mu_sigma_scaling07.nc',
-    pre+'2014_constant_mu_sigma_scaling08.nc',
-    pre+'2014_constant_mu_sigma_scaling09.nc',
-    pre+'2014_constant_mu_sigma_scaling10.nc',
-    pre+'2014_constant_mu_sigma_scaling11.nc',
-    pre+'2014_constant_mu_sigma_scaling12.nc'
-            ]
-
-# May 2015 is kept as an out-of-set test. Consistent with validation set of Attention U-Net
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2010_constant_mu_sigma_scaling01.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2010_constant_mu_sigma_scaling02.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2010_constant_mu_sigma_scaling03.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2010_constant_mu_sigma_scaling04.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2010_constant_mu_sigma_scaling05.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2010_constant_mu_sigma_scaling06.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2010_constant_mu_sigma_scaling07.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2010_constant_mu_sigma_scaling08.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2010_constant_mu_sigma_scaling09.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2010_constant_mu_sigma_scaling10.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2010_constant_mu_sigma_scaling11.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2010_constant_mu_sigma_scaling12.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2012_constant_mu_sigma_scaling01.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2012_constant_mu_sigma_scaling02.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2012_constant_mu_sigma_scaling03.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2012_constant_mu_sigma_scaling04.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2012_constant_mu_sigma_scaling05.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2012_constant_mu_sigma_scaling06.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2012_constant_mu_sigma_scaling07.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2012_constant_mu_sigma_scaling08.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2012_constant_mu_sigma_scaling09.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2012_constant_mu_sigma_scaling10.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2012_constant_mu_sigma_scaling11.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2012_constant_mu_sigma_scaling12.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2014_constant_mu_sigma_scaling01.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2014_constant_mu_sigma_scaling02.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2014_constant_mu_sigma_scaling03.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2014_constant_mu_sigma_scaling04.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2014_constant_mu_sigma_scaling05.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2014_constant_mu_sigma_scaling06.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2014_constant_mu_sigma_scaling07.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2014_constant_mu_sigma_scaling08.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2014_constant_mu_sigma_scaling09.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2014_constant_mu_sigma_scaling10.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2014_constant_mu_sigma_scaling11.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2014_constant_mu_sigma_scaling12.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling01.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling02.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling03.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling04.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling06.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling07.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling08.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling09.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling10.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling11.nc',
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling12.nc'
+ 
+            ]       
+# For ICML - for comparison with Attention U-Net baseline
 test_files = [
-    pre+'2015_constant_mu_sigma_scaling01.nc',
-    pre+'2015_constant_mu_sigma_scaling02.nc',
-    pre+'2015_constant_mu_sigma_scaling03.nc',
-    pre+'2015_constant_mu_sigma_scaling04.nc',
-    pre+'2015_constant_mu_sigma_scaling06.nc',
-    pre+'2015_constant_mu_sigma_scaling07.nc',
-    pre+'2015_constant_mu_sigma_scaling08.nc',
-    pre+'2015_constant_mu_sigma_scaling09.nc',
-    pre+'2015_constant_mu_sigma_scaling10.nc',
-    pre+'2015_constant_mu_sigma_scaling11.nc',
-    pre+'2015_constant_mu_sigma_scaling12.nc'
-         ] 
+    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling05.nc',
+         ]
+
+# Otherwise
+#test_files = [
+#    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling01.nc',
+#    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling02.nc',
+#    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling03.nc',
+#    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling04.nc',
+#    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling06.nc',
+#    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling07.nc',
+#    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling08.nc',
+#    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling09.nc',
+#    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling10.nc',
+#    '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling11.nc',
+#   '/scratch/users/ag4680/training_data/era5/'+pref+'inputfeatures_u_v_theta_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling12.nc'
+#         ]
+
 
 # final out of set testing on May 2015
+
+
 
 # Customized Dataloader - good for loading batches from:
 # -- carefully designed input files for both single-column and nonlocal global training, and 
@@ -174,13 +249,7 @@ class Dataset(torch.utils.data.Dataset):
         self.fac = int(self.stencil/2.)
         self.manual_shuffle=manual_shuffle
         #self.index = 0
-	
-        #self.v = np.arange(0,183) # for u,v,theta
-        #self.v = np.arange(0,243) # for u,v,theta,w
-        self.v = np.concatenate(  (np.arange(0,123),np.arange(183,243)), axis=0) # for u,v,w
-
-        self.idim = len(self.v)
-
+        
         # create permutations
         if self.manual_shuffle:
             self.seed  = 51
@@ -253,18 +322,18 @@ class Dataset(torch.utils.data.Dataset):
         if self.domain == 'singlepoint':
             # Note: assumes that the file is four dimensional (time, channels, lat, lon)
             if self.stencil == 1:
-                I = torch.from_numpy(self.inp[it,self.v,self.y0,self.x0].data.compute())
+                I = torch.from_numpy(self.inp[it,:,self.y0,self.x0].data.compute())
                 O = torch.from_numpy(self.out[it,:,self.y0,self.x0].data.compute())
                 return I,O
             else:
                 # Add boundary conditions!
-                I = torch.from_numpy(self.inp[it,self.v,self.y0-self.fac:self.y0+self.fac+1,self.x0-self.fac:self.x0+self.fac+1].data.compute())
+                I = torch.from_numpy(self.inp[it,:,self.y0-self.fac:self.y0+self.fac+1,self.x0-self.fac:self.x0+self.fac+1].data.compute())
                 O = torch.from_numpy(self.out[it,:,self.y0,self.x0].data.compute())
                 return I,O 
         elif self.domain == 'regional':
             
             if self.stencil == 1:
-                I = torch.from_numpy(self.inp[it,self.v,self.y1:self.y2,self.x1:self.x2].data.compute())
+                I = torch.from_numpy(self.inp[it,:,self.y1:self.y2,self.x1:self.x2].data.compute())
                 O = torch.from_numpy(self.out[it,:,self.y1:self.y2,self.x1:self.x2].data.compute())
                 
                 #print(I.shape)
@@ -280,7 +349,7 @@ class Dataset(torch.utils.data.Dataset):
             else:
                 # (time x pressure x lat x lon x st x st)
                 # convolution layer will be applied on the last two dimensions
-                I = torch.from_numpy(self.inp[it,self.v,self.y1:self.y2,self.x1:self.x2,:,:].data.compute())
+                I = torch.from_numpy(self.inp[it,:,self.y1:self.y2,self.x1:self.x2,:,:].data.compute())
                 O = torch.squeeze(torch.from_numpy(self.out[it,:,self.y1:self.y2,self.x1:self.x2,self.fac,self.fac].data.compute()))
                 # reorder it
                 I = torch.permute(I, (1,2,0,3,4))
@@ -294,7 +363,7 @@ class Dataset(torch.utils.data.Dataset):
             
         elif self.domain == 'global':
             if self.stencil == 1:
-                I = torch.from_numpy(self.inp[it,self.v,:,:].data.compute())
+                I = torch.from_numpy(self.inp[it,:,:,:].data.compute())
                 O = torch.from_numpy(self.out[it,:,:,:].data.compute())
                 
                 #print(I.shape)
@@ -311,7 +380,7 @@ class Dataset(torch.utils.data.Dataset):
             else:
                 # (time x pressure x lat x lon x st x st)
                 # convolution layer will be applied on the last two dimensions
-                I = torch.from_numpy(self.inp[it,self.v,:,:,:,:].data.compute())
+                I = torch.from_numpy(self.inp[it,:,:,:,:,:].data.compute())
                 O = torch.squeeze(torch.from_numpy(self.out[it,:,:,:,self.fac,self.fac].data.compute()))
                 # first reduce to a 4D tensor by vectorising to (time*lat*lon x pressure x st x st) shape
                 I = torch.permute(I, (1,2,0,3,4))
@@ -350,23 +419,13 @@ class ANN_CNN(nn.Module):
         # ADD fac number of 3x3 CNN layers 
         # Either apply a 3x3, 5x5, 7x7 CNN layer, or apply multiple 3x3 layers
         if self.fac == 1:
-            self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=3, stride=1, padding=0)
+            self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=self.stencil, stride=1, padding=0)
             self.act_cnn = nn.ReLU()
             self.dropout0 = nn.Dropout(p=0.5*self.dropout_prob)
-            write_log('CNN 1')
-            self.conv2 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=3, stride=1, padding=0)
-            self.act_cnn2 = nn.ReLU()
-            self.dropout0_2 = nn.Dropout(p=0.5*self.dropout_prob)
-            write_log('CNN 2')
         elif self.fac == 2:
-            self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=3, stride=1, padding=0)
+            self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=self.stencil, stride=1, padding=0)
             self.act_cnn = nn.ReLU()
             self.dropout0 = nn.Dropout(p=0.5*self.dropout_prob)
-            write_log('-CNN 1')
-            self.conv2 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=3, stride=1, padding=0)
-            self.act_cnn2 = nn.ReLU()
-            self.dropout0_2 = nn.Dropout(p=0.5*self.dropout_prob)
-            write_log('-CNN 2')
         elif self.fac == 3:
             self.conv1 = nn.Conv2d(in_channels=idim, out_channels=idim, kernel_size=self.stencil, stride=1, padding=0)
             self.act_cnn = nn.ReLU()
@@ -403,9 +462,7 @@ class ANN_CNN(nn.Module):
     def forward(self, x):
         
         if self.fac >= 1:
-            #x = torch.squeeze( self.dropout0(self.act_cnn(self.conv1(x))) )
             x = torch.squeeze( self.dropout0(self.act_cnn(self.conv1(x))) )
-            x = torch.squeeze( self.dropout0_2(self.act_cnn2(self.conv2(x))) )
             
         #elif fac == 2:
         #    x = self.conv1(x)
@@ -515,7 +572,7 @@ def training(nepochs,model,optimizer,loss_fn,trainloader,testloader,stencil, bs_
                 S = inp.shape
                 inp = inp.reshape(S[0]*S[1],S[2])
                 S = out.shape
-                out = out.reshape(S[0]*S[1],-1)
+                out = out.reshape(S[0]*S[1],S[2])
             elif stencil > 1:
                 S = inp.shape
                 inp = inp.reshape(S[0]*S[1],S[2],S[3], S[4])
@@ -562,18 +619,18 @@ bs_test=20#40#40#37
 write_log(f'train batch size = {bs_train}')
 write_log(f'validation batch size = {bs_test}')
 
-# ============================= 5x5 ===========================
+# ============================= 3x3 ===========================
 tstart=time2()
 # ID REGIONAL, SPECIFY THE REGION AS WELL
 # 1andes, 2scand, 3himalaya, 4newfound, 5south_ocn, 6se_asia, 7natlantic, 8npacific
 rgn='1andes'
 write_log(f'Region: {rgn}')
 # shuffle=False leads to much faster reading! Since 3x3 and 5x5 is slow, set this to False
-trainset1 = Dataset(files=train_files,domain='global', region=rgn, stencil=5, manual_shuffle=False, batch_size=bs_train)
+trainset1 = Dataset(files=train_files,domain='global', region=rgn, stencil=stencil, manual_shuffle=False, batch_size=bs_train)
 trainloader1 = torch.utils.data.DataLoader(trainset1, batch_size=bs_train, 
                                           drop_last=False, shuffle=False, num_workers=8)#, persistent_workers=True)
 
-testset1 = Dataset(files=test_files, domain='global', region=rgn, stencil=5, manual_shuffle=False, batch_size=bs_test)
+testset1 = Dataset(files=test_files, domain='global', region=rgn, stencil=stencil, manual_shuffle=False, batch_size=bs_test)
 testloader1 = torch.utils.data.DataLoader(testset1, batch_size=bs_test, 
                                          drop_last=False, shuffle=False, num_workers=8)#, persistent_workers=True)
 
@@ -581,29 +638,24 @@ tend=time2()
 write_log(f'total_time={tend-tstart}')
 
 
-# ================ 5x5 model ======================================================
+# ================ 3x3 model ======================================================
 idim    = trainset1.idim
 odim    = trainset1.odim
-hdim    = 4*idim
-write_log(f'Input dim: {idim}, hidden dim: {hdim}, output dim: {odim}')
-lr_min = 1e-4
-lr_max = 6e-4
-
-write_log(f'learning rate cycles between {lr_min} and {lr_max}')
+hdim    = 2*idim
 
 # lr 10-6 to 10-4 over 100 up and 100 down steps works well waise
 model1     = ANN_CNN(idim=idim,odim=odim,hdim=hdim,dropout=0.2, stencil=trainset1.stencil)
 model1 = model1.to(device)
 write_log(f'model1 created. \n --- model1 size: {model1.totalsize():.2f} MBs,\n --- Num params: {model1.totalparams()/10**6:.3f} mil. ')
 optim1     = optim.Adam(model1.parameters(),lr=1e-4)
-scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=lr_min, max_lr=lr_max, step_size_up=50, step_size_down=50, cycle_momentum=False)
+scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
 
 
 
 loss_fn    = nn.MSELoss()
 
 
-fac = torch.from_numpy(rho[15:74]**0.1)
+fac = torch.from_numpy(rho[15:]**0.1)
 fac = (1./fac).to(torch.float32)
 fac=fac.to(device)
 
@@ -617,16 +669,19 @@ tstart=time2()
 
 #restart=True
 
-file_prefix = "torch_saved_models/stratosphere_only/ablation/5x5_era5_global_ann_cnn_uvw_uwvw_ablation_2cnnlayers_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss" 
+file_prefix = "torch_saved_models/icml_global/3x3_era5_global_ann_cnn_leakyrelu_dropout0p1_cyclic_mseloss" 
+#nepochs=50 #30
 if restart:
+    #init_epoch = 9 # epoch to start new training from, reading from (epoch-1) file
+    
     idim    = trainset1.idim
     odim    = trainset1.odim
-    hdim    = 4*idim
+    hdim    = 2*idim
     model1     = ANN_CNN(idim=idim,odim=odim,hdim=hdim,dropout=0.2, stencil=trainset1.stencil)
     write_log(f'model1 created. \n --- model1 size: {model1.totalsize():.2f} MBs,\n --- Num params: {model1.totalparams()/10**6:.3f} mil. ')
     model1 = model1.to(device) # important to make this transfer before the optimizer step in the next line. Otherwise eror
     optim1     = optim.Adam(model1.parameters(),lr=1e-4)
-    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=lr_min, max_lr=lr_max, step_size_up=50, step_size_down=50, cycle_momentum=False) # changed lrs from 1e-4 to 1e-3, to 5e-5 to 5e-3
+    scheduler1 = torch.optim.lr_scheduler.CyclicLR(optim1, base_lr=1e-4, max_lr=1e-3, step_size_up=50, step_size_down=50, cycle_momentum=False)
     PATH=f'/scratch/users/ag4680/{file_prefix}_train_epoch{init_epoch-1}.pt'
     checkpoint = torch.load(PATH)
     model1.load_state_dict(checkpoint['model_state_dict'])

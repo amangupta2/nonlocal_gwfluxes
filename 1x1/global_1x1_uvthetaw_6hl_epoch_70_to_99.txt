@@ -1,0 +1,46 @@
+Retraining the 1x1 global model with u,v,theta,w after ICML. Revisiting and checking why validation error was so high with the u,v,theta runs. Trainset = 2010+2012+2014 + all except may 2015. Validation set = May 2015.
+File prefix: /scratch/users/ag4680/training_data/era5/1x1_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_
+Done
+train batch size = 20
+validation batch size = 20
+Region: 1andes
+total_time=1.4426162242889404
+Input dim: 491, hidden dim: 1964, output dim: 244
+model1 created. 
+ --- model1 size: 66.87 MBs,
+ --- Num params: 17.506 mil. 
+model1 created. 
+ --- model1 size: 66.87 MBs,
+ --- Num params: 17.506 mil. 
+Training...
+Epoch 70, 1/30, training mseloss: 0.497929, testing mseloss: 0.498826
+Epoch 71, 2/30, training mseloss: 0.497799, testing mseloss: 0.501100
+Epoch 72, 3/30, training mseloss: 0.497810, testing mseloss: 0.497387
+Epoch 73, 4/30, training mseloss: 0.497642, testing mseloss: 0.494739
+Epoch 74, 5/30, training mseloss: 0.497364, testing mseloss: 0.495114
+Epoch 75, 6/30, training mseloss: 0.497127, testing mseloss: 0.499038
+Epoch 76, 7/30, training mseloss: 0.496968, testing mseloss: 0.499761
+Epoch 77, 8/30, training mseloss: 0.496855, testing mseloss: 0.495722
+Epoch 78, 9/30, training mseloss: 0.496765, testing mseloss: 0.493087
+Epoch 79, 10/30, training mseloss: 0.496578, testing mseloss: 0.495240
+Epoch 80, 11/30, training mseloss: 0.496375, testing mseloss: 0.498326
+Epoch 81, 12/30, training mseloss: 0.496233, testing mseloss: 0.497942
+Epoch 82, 13/30, training mseloss: 0.496087, testing mseloss: 0.494400
+Epoch 83, 14/30, training mseloss: 0.495992, testing mseloss: 0.491637
+Epoch 84, 15/30, training mseloss: 0.495863, testing mseloss: 0.494678
+Epoch 85, 16/30, training mseloss: 0.495690, testing mseloss: 0.497874
+Epoch 86, 17/30, training mseloss: 0.495486, testing mseloss: 0.496100
+Epoch 87, 18/30, training mseloss: 0.495408, testing mseloss: 0.492939
+Epoch 88, 19/30, training mseloss: 0.495263, testing mseloss: 0.491986
+Epoch 89, 20/30, training mseloss: 0.495144, testing mseloss: 0.495143
+Epoch 90, 21/30, training mseloss: 0.495021, testing mseloss: 0.497995
+Epoch 91, 22/30, training mseloss: 0.494832, testing mseloss: 0.494325
+Epoch 92, 23/30, training mseloss: 0.494744, testing mseloss: 0.492365
+Epoch 93, 24/30, training mseloss: 0.494628, testing mseloss: 0.492081
+Epoch 94, 25/30, training mseloss: 0.494510, testing mseloss: 0.496459
+Epoch 95, 26/30, training mseloss: 0.494353, testing mseloss: 0.497306
+Epoch 96, 27/30, training mseloss: 0.494197, testing mseloss: 0.492995
+Epoch 97, 28/30, training mseloss: 0.494108, testing mseloss: 0.491128
+Epoch 98, 29/30, training mseloss: 0.494042, testing mseloss: 0.492457
+Epoch 99, 30/30, training mseloss: 0.493904, testing mseloss: 0.496720
+Done

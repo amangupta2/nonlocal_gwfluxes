@@ -1,7 +1,0 @@
-1. Break the single Python file into modules
-
-2. Prepare the data for the Stratosphere only
-
-3. Train the models both locally and regionally on the stratosphere_only data
-
-4. Do I need to prepare more testing data by downloading more ERA5 months?

@@ -1,0 +1,364 @@
+NGPUS = 1
+Inference for month 1
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling01.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_1.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+NGPUS = 1
+Inference for month 2
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling02.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_2.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+NGPUS = 1
+Inference for month 3
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling03.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_3.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+NGPUS = 1
+Inference for month 4
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling04.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_4.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+NGPUS = 1
+Inference for month 5
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling05.nc']
+NGPUS = 1
+Inference for month 6
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling06.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_6.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+NGPUS = 1
+Inference for month 7
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling07.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_7.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+NGPUS = 1
+Inference for month 8
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling08.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_8.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+NGPUS = 1
+Inference for month 9
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling09.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_9.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+NGPUS = 1
+Inference for month 10
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling10.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_10.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+NGPUS = 1
+Inference for month 11
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling11.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_11.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+NGPUS = 1
+Inference for month 12
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling12.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_12.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+NGPUS = 1
+Inference for month 1
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling01.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_1.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 2
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling02.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_2.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 3
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling03.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_3.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 4
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling04.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_4.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 5
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling05.nc']
+NGPUS = 1
+Inference for month 6
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling06.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_6.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 7
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling07.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_7.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 8
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling08.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_8.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 9
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling09.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_9.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 10
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling10.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_10.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 11
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.2.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling11.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_11.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 12
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.2.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling12.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_12_dropoutON.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 1
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.3.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling01.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_1_dropoutON.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 2
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.3.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling02.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_2_dropoutON.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 3
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.3.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling03.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_3_dropoutON.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 4
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.3.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling04.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_4_dropoutON.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 5
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.3.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling05.nc']
+NGPUS = 1
+Inference for month 6
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.3.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling06.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_6_dropoutON.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 7
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.3.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling07.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_7_dropoutON.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 8
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.3.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling08.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_8_dropoutON.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 9
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.3.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling09.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_9_dropoutON.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 10
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.3.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling10.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_10_dropoutON.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 11
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.3.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling11.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_11_dropoutON.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete
+NGPUS = 1
+Inference for month 12
+Inference the Attention UNet model on global horizontal and stratosphere_only vertical model, with features uvthetaw and dropout=0.3.
+Test files = ['/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_2015_constant_mu_sigma_scaling12.nc']
+Model created. 
+ --- model size: 144.30 MBs,
+ --- Num params: 37.812 mil. 
+Output NC file: /scratch/users/ag4680/gw_inference_ncfiles/inference_attnunet_era5_global_stratosphere_only_uvthetaw_mseloss_train_epoch91_2015_12_dropoutON.nc
+Initiating inference
+Minibatch=0, count=0, output shape=torch.Size([40, 120, 64, 128])
+Inference complete

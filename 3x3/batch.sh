@@ -1,14 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name=3_8
+#SBATCH --job-name=3x3_uvthw
 #SBATCH --partition=serc
 #SBATCH -c 10
 #SBATCH -G 1
 #SBATCH --gpus-per-node=1
-#SBATCH --time=48:00:00
+#SBATCH --time=168:00:00
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --output=gpu_slurm-%j.out
 #SBATCH -C GPU_MEM:80GB
-#SBATCH --mem-per-cpu=5GB
+#SBATCH --mem-per-cpu=20GB
 ###SBATCH --job-name=jupyter_notebook
 ###SBATCH --mail-user=ag4680@stanford.edu
 ###SBATCH --mail-type=BEGIN,END,FAIL
@@ -29,7 +29,7 @@ source /home/groups/aditis2/ag4680/miniconda3/etc/profile.d/conda.sh
 #conda activate jupyter_notebook
 conda activate siv2
 
-#python 3x3trainscript.py
+python trainscript.py
 
 # 1andes, 2scand, 3himalaya, 4newfound, 5south_ocn, 6se_asia, 7natlantic, 8npacific
-python regional3x3.py 8npacific 59
+#python regional3x3.py 8npacific 59

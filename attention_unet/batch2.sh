@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=uvw5x5ss
+#SBATCH --job-name=inferIFS
 #SBATCH --partition=serc
 #SBATCH -c 10
 #SBATCH -G 1
@@ -8,12 +8,7 @@
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --output=gpu_slurm-%j.out
 #SBATCH -C GPU_MEM:80GB
-#SBATCH --mem-per-cpu=10GB # 5GB for regional, but 10 GB for global 5x5
-###SBATCH --job-name=jupyter_notebook
-###SBATCH --mail-user=ag4680@stanford.edu
-###SBATCH --mail-type=BEGIN,END,FAIL
-###SBATCH --partition=serc
-###SBATCH -p gpu (use serc, not gpu, which has 80 GB A100s too)
+#SBATCH --mem-per-cpu=5GB
 
 # from Mark:
 # use sh_node_feat -p serc (or gpu) to see the node structure of the partition and what GPUs are available
@@ -28,8 +23,21 @@
 source /home/groups/aditis2/ag4680/miniconda3/etc/profile.d/conda.sh
 conda activate siv2
 
-python 5x5global_training.py
+# 'global'/'stratosphere_only' and 'feature_set'
+# TRAINING
+#python training_attention_unet.py global uvthetaw
 
-# 1andes, 2scand, 3himalaya, 4newfound, 5south_ocn, 6se_asia, 7natlantic, 8npacific
-#python regional1x1.py 8npacific
-#python troposphere_regional1x1.py 1andes
+
+
+
+
+# INFERENCE
+# Most optimal epochs to use for respective configs
+# stratosphere_only | uvtheta  | epoch=100 | month
+# stratosphere_only | uvthetaw | epoch=100 | month
+# Usage: python inference.py <vertical> <features> <epoch> <month>
+python inference2.py stratosphere_only uvthetaw 100 $month 1
+python inference2.py stratosphere_only uvtheta 100 $month 1
+
+
+

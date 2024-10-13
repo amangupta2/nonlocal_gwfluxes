@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=5x5_glob2cnns
+#SBATCH --job-name=5x5_uvthw
 #SBATCH --partition=serc
 #SBATCH -c 10
 #SBATCH -G 1
@@ -8,7 +8,7 @@
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --output=gpu_slurm-%j.out
 #SBATCH -C GPU_MEM:80GB
-#SBATCH --mem-per-cpu=10GB # 5GB for regional, but 10 GB for global 5x5 
+#SBATCH --mem-per-cpu=20GB # 5GB for regional, but 10 GB for global 5x5 
 ###SBATCH --job-name=jupyter_notebook
 ###SBATCH --mail-user=ag4680@stanford.edu
 ###SBATCH --mail-type=BEGIN,END,FAIL
@@ -29,7 +29,7 @@ source /home/groups/aditis2/ag4680/miniconda3/etc/profile.d/conda.sh
 #conda activate jupyter_notebook
 conda activate siv2
 
-python 5x5trainscript.py
+python trainscript.py
 # 1andes, 2scand, 3himalaya, 4newfound, 5south_ocn, 6se_asia, 7natlantic, 8npacific
 #python regional5x5.py 1andes 41
 
