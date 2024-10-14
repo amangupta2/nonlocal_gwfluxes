@@ -1,0 +1,12 @@
+NGPUS = 1
+Training the 3x3 ANN-CNNs, global horizontal and global vertical model with features uvtheta with min-max learning rates 0.0001 to 0.0009 for a CyclicLR, and dropout=0.1.
+
+Training the global horizontal and global vertical model, with features uvtheta with min-max learning rates 0.0001 to 0.0009, and dropout=0.1. Starting from epoch 1. Training on years [2010 2012 2014] and testing on years [2015].
+
+Defined input files
+train batch size = 10
+validation batch size = 10
+Input dim: 369, hidden dim: 1476, output dim: 244
+Restarting - model created. 
+ --- model size: 43.37 MBs,
+ --- Num params: 11.351 mil. 

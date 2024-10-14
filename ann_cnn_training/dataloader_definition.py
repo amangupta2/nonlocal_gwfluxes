@@ -38,6 +38,8 @@ class Dataset_ANN_CNN(torch.utils.data.Dataset):
         self.features = features
         self.inp = self.ds["features"]
         self.out = self.ds["output"]
+        self.lat = self.ds["lat"]
+        self.lon = self.ds["lon"]
 
         self.nt = len(self.ds.time)
 
@@ -47,7 +49,6 @@ class Dataset_ANN_CNN(torch.utils.data.Dataset):
         self.stencil=stencil # for nonlocal training
         self.fac = int(self.stencil/2.)
         self.manual_shuffle=manual_shuffle
-        #self.index = 0
 
         if self.vertical == 'global':
             # 122 channels for each feature
@@ -83,10 +84,6 @@ class Dataset_ANN_CNN(torch.utils.data.Dataset):
             self.x0 = 102
 
         if self.domain == 'regional':
-            #self.y1 = 10
-            #self.y2 = 18
-            #self.x1 = 98
-            #self.x2 = 106
             if self.region == '1andes':
                 self.y1=3
                 self.y2=21

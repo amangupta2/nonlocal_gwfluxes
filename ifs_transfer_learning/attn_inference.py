@@ -110,7 +110,7 @@ write_log(f'Output NC file: {out}')
 
 # better to create the file within the inference_and_save function
 write_log('Initiating inference')
-Inference_and_Save(model,testset,testloader,bs_test,device,log_filename,out)
+Inference_and_Save_AttentionUNet(model,testset,testloader,bs_test,device,log_filename,out)
 
 write_log('Inference complete')
 

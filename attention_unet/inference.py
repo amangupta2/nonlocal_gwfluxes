@@ -16,7 +16,7 @@ import torch.multiprocessing as mp
 
 from dataloader_attention_unet import Dataset
 from model_attention_unet import Attention_UNet
-from function_training import training_aunet, inference_and_save
+from function_training import Training_AttentionUNet, Inference_and_Save_AttentionUNet
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -104,7 +104,7 @@ write_log(f'Output NC file: {out}')
 
 # better to create the file within the inference_and_save function
 write_log('Initiating inference')
-inference_and_save(model,testset,testloader,bs_test,device,log_filename,out)
+Inference_and_Save_AttentionUNet(model,testset,testloader,bs_test,device,log_filename,out)
 
 write_log('Inference complete')
 

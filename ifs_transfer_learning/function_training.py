@@ -282,7 +282,7 @@ def Training_AttentionUNet_TransferLearning(nepochs,model,optimizer,loss_fn,trai
 
 
 
-def Inference_and_Save(model,testset,testloader,bs_test,device,log_filename,outfile):
+def Inference_and_Save_Attention_UNet(model,testset,testloader,bs_test,device,log_filename,outfile):
 
     # ---------------------------------------------------------------------------------------
     idim  = testset.idim

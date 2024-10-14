@@ -44,11 +44,11 @@ restart=False
 init_epoch=1 # where to resume. Should have checkpoint saved for init_epoch-1. 1 for fresh runs.
 nepochs=100
 # ----------------------
-features=sys.argv[3] #'uvtheta'
-stencil=int(sys.argv[4]) # stencil size
-# ----------------------
 domain=sys.argv[1] #global' # 'regional'
 vertical=sys.argv[2] #'global' # or 'stratosphere_only'
+# ----------------------
+features=sys.argv[3] #'uvtheta'
+stencil=int(sys.argv[4]) # stencil size
 # ----------------------
 lr_min = 1e-4
 lr_max = 9e-4

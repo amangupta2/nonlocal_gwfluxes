@@ -1,0 +1,17 @@
+NGPUS = 1
+Training the 1x1 ANN-CNNs, global horizontal and stratosphere_only vertical model with features uvtheta with min-max learning rates 0.0001 to 0.0009 for a CyclicLR, and dropout=0.1.
+
+Training the global horizontal and stratosphere_only vertical model, with features uvtheta with min-max learning rates 0.0001 to 0.0009, and dropout=0.1. Starting from epoch 1. Training on years [2010 2012 2014] and testing on years [2015].
+
+Defined input files
+train batch size = 20
+validation batch size = 20
+Input dim: 183, hidden dim: 732, output dim: 120
+Restarting - model created. 
+ --- model size: 9.55 MBs,
+ --- Num params: 2.495 mil. 
+Epoch 1, 1/100, training mseloss: 0.245479, testing mseloss: 0.247675
+Epoch 2, 2/100, training mseloss: 0.239417, testing mseloss: 0.243364
+Epoch 3, 3/100, training mseloss: 0.237617, testing mseloss: 0.242973
+Epoch 4, 4/100, training mseloss: 0.236488, testing mseloss: 0.242486
+Epoch 5, 5/100, training mseloss: 0.235657, testing mseloss: 0.239980

@@ -80,7 +80,7 @@ def Training_AttentionUNet(nepochs,model,optimizer,loss_fn,trainloader,testloade
     return model, LOSS_TRAIN, LOSS_TEST#, EVOLVE
 
 
-def inference_and_save(model,testset,testloader,bs_test,device,log_filename,outfile):
+def Inference_and_Save_AttentionUNet(model,testset,testloader,bs_test,device,log_filename,outfile):
 
     # ---------------------------------------------------------------------------------------
     idim  = testset.idim

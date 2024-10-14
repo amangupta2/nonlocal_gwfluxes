@@ -43,29 +43,29 @@ class ANN_CNN(nn.Module):
         # can define a block and divide it into blocks as well
         self.layer1    = nn.Linear(idim,hdim)#,dtype=torch.float16)
         self.act1      = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
-        #self.bnorm1   = nn.BatchNorm1d(hdim)
+        self.bnorm1   = nn.BatchNorm1d(hdim)
 
-        self.dropout1  = nn.Dropout(p=0.5*self.dropout_prob)
+        self.dropout  = nn.Dropout(p=self.dropout_prob)
+
         self.layer2    = nn.Linear(hdim,hdim)
         self.act2      = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
-        #self.bnorm2   = nn.BatchNorm1d(hdim)
-        self.dropout2  = nn.Dropout(p=self.dropout_prob)
+        self.bnorm2   = nn.BatchNorm1d(hdim)
+        # -------------------------------------------------------
         self.layer3    = nn.Linear(hdim,hdim)
         self.act3      = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
-        #self.bnorm3   = nn.BatchNorm1d(hdim)
-        self.dropout3  = nn.Dropout(p=self.dropout_prob)
+        self.bnorm3   = nn.BatchNorm1d(hdim)
+        # -------------------------------------------------------
         self.layer4    = nn.Linear(hdim,hdim)
         self.act4      = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
-        #self.bnorm4   = nn.BatchNorm1d(2*hdim)
-        self.dropout4  = nn.Dropout(p=self.dropout_prob)
+        self.bnorm4   = nn.BatchNorm1d(2*hdim)
+        # --------------------------------------------------------
         self.layer5    = nn.Linear(hdim,hdim)
         self.act5      = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
         self.bnorm5    = nn.BatchNorm1d(hdim)
-        self.dropout5  = nn.Dropout(p=self.dropout_prob)
+        # -------------------------------------------------------
         self.layer6    = nn.Linear(hdim,2*odim)
         self.act6      = nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.LeakyReLU()#nn.Tanh()#nn.GELU()#nn.ReLU()
         self.bnorm6    = nn.BatchNorm1d(2*odim)
-        self.dropout6  = nn.Dropout(p=self.dropout_prob)
 
         self.output    = nn.Linear(2*odim,odim)
 
@@ -82,12 +82,12 @@ class ANN_CNN(nn.Module):
         #elif fac == 3:
 
         #print(f'new shape: {x.shape}')    
-        x = self.dropout1(self.act1(self.layer1(x)))
-        x = self.dropout2(self.act2(self.layer2(x)))
-        x = self.dropout3(self.act3(self.layer3(x)))
-        x = self.dropout4(self.act4(self.layer4(x)))
-        x = self.dropout5(self.act5(self.layer5(x)))
-        x = self.dropout6(self.act6(self.layer6(x)))
+        x = self.dropout(self.act1(self.layer1(x)))
+        x = self.dropout(self.act2(self.layer2(x)))
+        x = self.dropout(self.act3(self.layer3(x)))
+        x = self.dropout(self.act4(self.layer4(x)))
+        x = self.dropout(self.act5(self.layer5(x)))
+        x = self.dropout(self.act6(self.layer6(x)))
         x = self.output(x)
 
         #x = self.dropout1(self.bnorm1(self.act1(self.layer1(x))))
