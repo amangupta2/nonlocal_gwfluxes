@@ -1,3 +1,4 @@
 # not tracking all error and output files
 *.out
 *.err
+*.txt

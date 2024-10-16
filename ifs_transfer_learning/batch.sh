@@ -4,10 +4,10 @@
 #SBATCH -c 10
 #SBATCH -G 1
 #SBATCH --gpus-per-node=1
-#SBATCH --time=168:00:00
+#SBATCH --time=12:00:00
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --output=gpu_slurm-%j.out
-#SBATCH -C GPU_MEM:80GB
+#SBATCH -C GPU_MEM:40GB
 #SBATCH --mem-per-cpu=5GB
 
 # from Mark:
@@ -24,10 +24,12 @@ source /home/groups/aditis2/ag4680/miniconda3/etc/profile.d/conda.sh
 conda activate siv2
 
 # 'attention/ann' 'global'(horizontal) 'global'/'stratosphere_only'(vertical) and 'feature_set', 'CHECKPOINT_EPOCH'
-# TRAINING
-python training_ifs_transfer_learning.py attention global stratosphere_only uvtheta 100
+# TRAINING - ATTENTION
+#python training_ifs_transfer_learning.py attention global stratosphere_only uvtheta 100
+#python training_ifs_transfer_learning.py attention global stratosphere_only uvthetaw 100
 
-
-
+# TRAINING - ANN_CNN
+# 'attention/ann' 'global'(horizontal) 'global'/'stratosphere_only'(vertical) and 'feature_set', 'CHECKPOINT_EPOCH', <stencil>
+python training_ifs_transfer_learning.py ann global stratosphere_only uvtheta 100 1
 
 

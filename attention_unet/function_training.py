@@ -77,7 +77,7 @@ def Training_AttentionUNet(nepochs,model,optimizer,loss_fn,trainloader,testloade
                 'scheduler' : 'CyclicLR'
                 }, savepath)
 
-    return model, LOSS_TRAIN, LOSS_TEST#, EVOLVE
+    return model, LOSS_TRAIN, LOSS_TEST
 
 
 def Inference_and_Save_AttentionUNet(model,testset,testloader,bs_test,device,log_filename,outfile):

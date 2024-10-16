@@ -38,6 +38,8 @@ class Dataset_ANN_CNN(torch.utils.data.Dataset):
         self.features = features
         self.inp = self.ds["features"]
         self.out = self.ds["output"]
+        self.lat = self.ds["lat"]
+        self.lon = self.ds["lon"]
 
         self.nt = len(self.ds.time)
 
@@ -52,19 +54,19 @@ class Dataset_ANN_CNN(torch.utils.data.Dataset):
         if self.vertical == 'global':
             # 122 channels for each feature
             if self.features == 'uvtheta':
-                self.v = np.arange(3,369) # for u,v,theta
+                self.v = np.arange(0,369) # for u,v,theta
             elif self.features == 'uvthetaw':
-                self.v = np.arange(3,491) # for u,v,theta,w
+                self.v = np.arange(0,491) # for u,v,theta,w
             elif self.features == 'uvw':
-                self.v = np.concatenate(  (np.arange(3,247),np.arange(369,491)), axis=0) # for u,v,w
+                self.v = np.concatenate(  (np.arange(0,247),np.arange(369,491)), axis=0) # for u,v,w
         elif self.vertical == 'stratosphere_only':
             # 60 channels for each feature
             if self.features == 'uvtheta':
-                self.v = np.arange(3,183) # for u,v,theta
+                self.v = np.arange(0,183) # for u,v,theta
             elif self.features == 'uvthetaw':
-                self.v = np.arange(3,243) # for u,v,theta,w
+                self.v = np.arange(0,243) # for u,v,theta,w
             elif self.features == 'uvw':
-                self.v = np.concatenate(  (np.arange(3,123),np.arange(183,243)), axis=0) # for u,v,w
+                self.v = np.concatenate(  (np.arange(0,123),np.arange(183,243)), axis=0) # for u,v,w
 
         self.idim = len(self.v)
 
@@ -251,6 +253,8 @@ class Dataset_AttentionUNet(torch.utils.data.Dataset):
         self.features = features
         self.inp = self.ds["features"]
         self.out = self.ds["output"]
+        self.lat = self.ds["lat"]
+        self.lon = self.ds["lon"]
 
         self.nt = len(self.ds.time)
 

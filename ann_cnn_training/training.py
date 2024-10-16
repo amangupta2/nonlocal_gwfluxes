@@ -143,7 +143,7 @@ if restart:
 
 
 # Training loop
-model, loss_train = Training_ANN_CNN(nepochs=nepochs, init_epoch=init_epoch,
+model, loss_train, loss_test = Training_ANN_CNN(nepochs=nepochs, init_epoch=init_epoch,
                                 model=model, optimizer=optimizer, loss_fn=loss_fn,
                                 trainloader=trainloader, testloader=testloader,
                                 stencil=trainset.stencil,

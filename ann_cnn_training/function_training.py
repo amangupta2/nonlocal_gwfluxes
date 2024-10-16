@@ -89,7 +89,7 @@ def Training_ANN_CNN(nepochs,model,optimizer,loss_fn,trainloader,testloader,sten
                 'scheduler' : 'CyclicLR'
                 }, savepath)
 
-    return model, LOSS_TRAIN, LOSS_TEST#, EVOLVE
+    return model, LOSS_TRAIN, LOSS_TEST
 
 
 def Inference_and_Save_ANN_CNN(model,testset,testloader,bs_test,device,stencil,log_filename,outfile):
@@ -135,7 +135,7 @@ def Inference_and_Save_ANN_CNN(model,testset,testloader,bs_test,device,stencil,l
     testloss=0.
     count=0
     for i, (INP, OUT) in enumerate(testloader):
-        print(i)
+        #print(i)
         INP=INP.to(device)
         OUT=OUT.to(device)
         if stencil==1:
@@ -157,8 +157,8 @@ def Inference_and_Save_ANN_CNN(model,testset,testloader,bs_test,device,stencil,l
                 log = open(log_filename,'a')
                 print(f'Minibatch={i}, count={count}, output shape={S}', file=log)
 
-        print(f'OUT.shape = {OUT.shape}')
-        print(f'PRED.shape = {PRED.shape}')
+        #print(f'OUT.shape = {OUT.shape}')
+        #print(f'PRED.shape = {PRED.shape}')
 
         # Reshape input and output from (batch_size*ny*nx,nz) to (batch_size,nz,ny,nx)
         OUT  = OUT.reshape(nt,ny,nx,odim)
@@ -166,16 +166,16 @@ def Inference_and_Save_ANN_CNN(model,testset,testloader,bs_test,device,stencil,l
         PRED = PRED.reshape(nt,ny,nx,odim)
         PRED = torch.permute(PRED, (0,3,1,2))
 
-        print(f'New OUT.shape = {OUT.shape}')
-        print(f'New PRED.shape = {PRED.shape}')
+        #print(f'New OUT.shape = {OUT.shape}')
+        #print(f'New PRED.shape = {PRED.shape}')
 
         # write to netCDF
         if device != 'cpu':
-            print('Writing')
+            #print('Writing')
             o_output[count:count+nt,:,:,:] = OUT[:].detach().cpu().numpy()
             o_pred[count:count+nt,:,:,:]   = PRED[:].detach().cpu().numpy()
         else:
-            print('Writing')
+            #print('Writing')
             o_output[count:count+nt,:,:,:] = OUT[:].numpy()
             o_pred[count:count+nt,:,:,:] = PRED[:].numpy()
         count+=nt

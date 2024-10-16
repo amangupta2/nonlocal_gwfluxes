@@ -67,7 +67,10 @@ init_epoch=1 # which epoch to resume from. Should have restart file from init_ep
 nepochs=100
 # ----------------------
 features=sys.argv[4]#'uvtheta'
-stencil=1 # only relevant if model_type='ann'
+if model_type=="attention":
+    stencil=1
+else:
+    stencil=int(sys.argv[6])
 # ----------------------
 domain=sys.argv[2] #global' # 'regional'. Most likely won't set regional for these experiments. The functions might not be constructed to handle them properly
 vertical=sys.argv[3] #'global' # or 'stratosphere_only'
@@ -78,23 +81,21 @@ lr_max = 9e-4
 dropout=0
 ckpt_epoch=sys.argv[5]
 if model_type=='ann':
-    PATH=f'/scratch/users/ag4680/torch_saved_models/stratosphere_only/{stencil}x{stencil}_era5_global_ann_cnn_{features}_uwvw_4idim_4hl_leakyrelu_dropout0p2_cyclic_mseloss_train_epoch4.pt'
+    PATH=f'/scratch/users/ag4680/torch_saved_models/JAMES/{vertical}/ann_cnn_{stencil}x{stencil}_{domain}_{vertical}_era5_{features}__train_epoch{ckpt_epoch}.pt'
 elif model_type=='attention':
     PATH=f'/scratch/users/ag4680/torch_saved_models/attention_unet/attnunet_era5_{domain}_{vertical}_{features}_mseloss_train_epoch{ckpt_epoch}.pt'
 
-if model_type=='attention':
-    stencil=1
 
 if vertical == 'global':
     if model_type=='ann':
-        log_filename=f"./IFStransfer_global_ann_{stencil}x{stencil}_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+        log_filename=f"./IFStransfer_global_ann_cnn_{stencil}x{stencil}_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
     elif model_type=='attention':
         log_filename=f"./IFStransfer_global_attention_{features}_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 elif vertical == 'stratosphere_only':
     if model_type=='ann':
-        log_filename=f"./IFStransfer_ss_only_{stencil}x{stencil}_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+        log_filename=f"./IFStransfer_stratosphere_only_ann_cnn_{stencil}x{stencil}_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
     elif model_type=='attention':
-        log_filename=f"./IFStransfer_ss_only_attention_{features}_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+        log_filename=f"./IFStransfer_stratosphere_only_attention_{features}_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
@@ -176,6 +177,7 @@ elif model_type=='attention':
     odim    = trainset.odim
 
 
+write_log(f'Loading model checkpoint from {PATH}')
 # lr 10-6 to 10-4 over 100 up and 100 down steps works well waise
 # Important note: The optimizer is loaded on to the same device at the model. So best to first define the model and port to the GPU, and then define the optimizer.
 # Otherwise, will have to port both the model and optimizer onto the device at the end, to prevent device mismatch error
@@ -233,7 +235,7 @@ elif model_type=='attention':
 
 # might not need to restart - so haven't added that part here. If needed, borrow it from other files
 
-write_log('Re-Training final layers...')
+write_log('Re-Training final two layers...')
 if model_type == 'ann':
     model, loss_train = Training_ANN_CNN_TransferLearning(nepochs=nepochs, init_epoch=init_epoch,
                                 model=model, optimizer=optimizer, loss_fn=loss_fn, 
