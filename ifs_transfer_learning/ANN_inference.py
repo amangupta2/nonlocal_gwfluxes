@@ -64,9 +64,15 @@ if teston=='ERA5':
     test_month = int(sys.argv[5]) #np.arange(1,13)
     write_log(f'Inference for month {test_month}')
     if vertical == 'stratosphere_only':
-        pre=f'/scratch/users/ag4680/training_data/era5/stratosphere_{stencil}x{stencil}_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
+        if stencil==1:
+            pre=f'/scratch/users/ag4680/training_data/era5/stratosphere_{stencil}x{stencil}_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
+        else:
+             pre=f'/scratch/users/ag4680/training_data/era5/stratosphere_nonlocal_{stencil}x{stencil}_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
     elif vertical == 'global':
-        pre=f'/scratch/users/ag4680/training_data/era5/{stencil}x{stencil}_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_'
+        if stencil == 1:
+            pre=f'/scratch/users/ag4680/training_data/era5/{stencil}x{stencil}_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_'
+        else:
+            pre=f'/scratch/users/ag4680/training_data/era5/nonlocal_{stencil}x{stencil}_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_'
 
     for year in test_years:
         for months in np.arange(test_month,test_month+1):

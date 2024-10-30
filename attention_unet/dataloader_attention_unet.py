@@ -52,6 +52,8 @@ class Dataset_AttentionUNet(torch.utils.data.Dataset):
                 self.v = np.arange(3,491) # for u,v,theta,w
             elif self.features == 'uvw':
                 self.v = np.concatenate(  (np.arange(3,247),np.arange(369,491)), axis=0) # for u,v,w
+            self.w = np.arange(0,self.odim) # all vertical channels
+
         elif self.vertical == 'stratosphere_only':
             # 60 channels for each feature
             if self.features == 'uvtheta':
@@ -64,7 +66,19 @@ class Dataset_AttentionUNet(torch.utils.data.Dataset):
                 self.v = np.concatenate(  (np.arange(3,183),np.arange(243,303)), axis=0) # for u,v,theta,N2
             elif self.features == 'uvthetawN2':
                 self.v = self.v = np.arange(3,303) # for u,v,theta,w,N2
-        
+            self.w = np.arange(0,self.odim) # all vertical channels
+
+        elif self.vertical == 'stratosphere_update':
+            # 122 channels for each feature
+            if self.features == 'uvtheta':
+                self.v = np.arange(3,369) # for u,v,theta
+            elif self.features == 'uvthetaw':
+                self.v = np.arange(3,491) # for u,v,theta,w
+            elif self.features == 'uvw':
+                self.v = np.concatenate(  (np.arange(3,247),np.arange(369,491)), axis=0) # for u,v,w
+            self.w = np.concatenate( (np.arange(0,60),np.arange(122,182)) , axis=0) #select upper 60 channels for uw and upper 60 for vw
+            self.odim = len(self.w) # update self.odim accordingly 
+
         self.idim = len(self.v)
 
         # create permutations
@@ -132,14 +146,14 @@ class Dataset_AttentionUNet(torch.utils.data.Dataset):
         if self.domain == 'regional':
 
             I = torch.from_numpy(self.inp[it,self.v,self.y1:self.y2,self.x1:self.x2].data.compute())
-            O = torch.squeeze(torch.from_numpy(self.out[it,:,self.y1:self.y2,self.x1:self.x2].data.compute()))
+            O = torch.squeeze(torch.from_numpy(self.out[it,self.w,self.y1:self.y2,self.x1:self.x2].data.compute()))
             
             return I,O
 
         elif self.domain == 'global':
             
             I = torch.from_numpy(self.inp[it,self.v,:,:].data.compute())
-            O = torch.from_numpy(self.out[it,:,:,:].data.compute())
+            O = torch.from_numpy(self.out[it,self.w,:,:].data.compute())
             
             return I,O
 

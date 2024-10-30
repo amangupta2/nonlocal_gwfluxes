@@ -45,13 +45,13 @@ init_epoch=1 # where to resume. Should have checkpoint saved for init_epoch-1. 1
 nepochs=100
 # ----------------------
 domain=sys.argv[1] #global' # 'regional'
-vertical=sys.argv[2] #'global' # or 'stratosphere_only'
+vertical=sys.argv[2] #'global' # or 'stratosphere_only' or 'stratosphere_update'
 # ----------------------
 features=sys.argv[3] #'uvtheta'
 stencil=int(sys.argv[4]) # stencil size
 # ----------------------
 lr_min = 1e-4
-lr_max = 9e-4
+lr_max = 5e-4
 # ----------------------
 if stencil == 1:
     bs_train=20
@@ -81,7 +81,7 @@ if vertical == 'stratosphere_only':
         pre='/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
     else:
         pre=f'/scratch/users/ag4680/training_data/era5/stratosphere_nonlocal_{stencil}x{stencil}_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
-elif vertical == 'global':
+elif vertical == 'global' or vertical=='stratosphere_update':
     if stencil == 1:
         pre='/scratch/users/ag4680/training_data/era5/1x1_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_'
     else:

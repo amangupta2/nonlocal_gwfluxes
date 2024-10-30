@@ -1,10 +1,10 @@
 #!/bin/bash
-#SBATCH --job-name=TLINFER
+#SBATCH --job-name=TLINF
 #SBATCH --partition=serc
 #SBATCH -c 10
 #SBATCH -G 1
 #SBATCH --gpus-per-node=1
-#SBATCH --time=168:00:00
+#SBATCH --time=2:00:00
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --output=gpu_slurm-%j.out
 #SBATCH -C GPU_MEM:80GB
@@ -39,16 +39,34 @@ conda activate siv2
 #python attn_inference.py stratosphere_only uvthetaw 100 IFS
 
 
-# for ERA5 and dropout=0: <vertical> <features> <ckpt#> <test_on> <validation month>
-for month in 1 2 3 4 5 6 7 8 9 10 11 12;
-do
+# for ERA5 and dropout=0: <vertical> <features> <ckpt#> <test_on> <validation month> <stencil>
+#for month in 1 2 3 4 5 6 7 8 9 10 11 12;
+#do
+	#python ANN_inference.py global uvtheta 100 ERA5 $month 3
+	#python ANN_inference.py global uvthetaw 100 ERA5 $month 3
+	#python ANN_inference.py stratosphere_only uvtheta 100 ERA5 $month 3
+	#python ANN_inference.py stratosphere_only uvthetaw 100 ERA5 $month 3
+
+	#python attn_inference.py global uvtheta 100 ERA5 $month
+        #python attn_inference.py global uvthetaw 100 ERA5 $month
         #python attn_inference.py stratosphere_only uvtheta 100 ERA5 $month
         #python attn_inference.py stratosphere_only uvthetaw 100 ERA5 $month
-	python ANN_inference.py stratosphere_only uvtheta 100 ERA5 $month 1
-done
-#python attn_inference.py attention global stratosphere_only uvthetaw 100
+#done
 
+#python attn_inference.py global uvtheta 100 IFS 1
+#python attn_inference.py global uvthetaw 100 IFS 1
+python attn_inference.py stratosphere_only uvtheta 100 IFS 1
+python attn_inference.py stratosphere_only uvthetaw 100 IFS 1
 
+#python ANN_inference.py global uvtheta 100 IFS 1 1
+#python ANN_inference.py global uvthetaw 100 IFS 1 1
+#python ANN_inference.py stratosphere_only uvtheta 100 IFS 1 1
+#python ANN_inference.py stratosphere_only uvthetaw 100 IFS 1 1
+
+#python ANN_inference.py global uvtheta 100 IFS 1 3
+#python ANN_inference.py global uvthetaw 100 IFS 1 3
+#python ANN_inference.py stratosphere_only uvtheta 100 IFS 1 3
+#python ANN_inference.py stratosphere_only uvthetaw 100 IFS 1 3
 
 #for IFS and dropout!=0 (need ensemble numbers are well): # for IFS and dropout=0: <vertical> <features> <ckpt#> <test_on> <ensemble_no.>
 

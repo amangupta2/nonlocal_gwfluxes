@@ -39,25 +39,25 @@ print(device)
 # IMPORTANT RUN PARAMETERS TO SET BEFORE SUBMISSION
 restart=False
 init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready, otherwise 1
-nepochs=100
+nepochs=150
 bs_train= 40#80 (80 works for most). (does not work for global uvthetaw)
 bs_test=bs_train
 
 # --------------------------------------------------
 domain='global' # 'regional'
-vertical=sys.argv[1] #'stratosphere_only' # 'global'
+vertical=sys.argv[1] #'stratosphere_only' # 'global', # stratosphere_update
 features=sys.argv[2] #'uvthetaw' # 'uvtheta', ''uvthetaw', or 'uvw' for troposphere | additionally 'uvthetaN2' and 'uvthetawN2' for stratosphere_only
 # --------------------------------------------------
-if vertical == "stratosphere_only":
-    lr_min = 1e-3
-    lr_max = 9e-3
+if vertical == "stratosphere_only" or vertical == "stratosphere_update":
+    lr_min = 1e-4
+    lr_max = 5e-4
 else: # lower for the troposphere
-    lr_min = 1e-3#-4
-    lr_max = 9e-3#-4
-dropout=0 # dropout probability
+    lr_min = 1e-4#-4
+    lr_max = 5e-4#-4
+dropout=0.05 # dropout probability
 
 
-log_filename=f"./attnunet_{domain}_{vertical}_{features}_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+log_filename=f"./attnunet_{domain}_{vertical}_{features}_smalldropout_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 #log_filename=f"./icml_train_ann-cnn_1x1_global_4hl_dropout0p1_hdim-2idim_restart_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
@@ -76,7 +76,7 @@ write_log(f'Training the {domain} horizontal and {vertical} vertical model with 
 
 if vertical == 'stratosphere_only':
     pre='/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
-elif vertical == 'global':
+elif vertical == 'global' or vertical == 'stratosphere_update':
     pre='/scratch/users/ag4680/training_data/era5/1x1_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_'
 
 train_files=[]
@@ -112,6 +112,10 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=bs_train,
 # create model and set hyperparameters
 ch_in  = trainset.idim
 ch_out = trainset.odim
+
+write_log(f'Input channel: {ch_in}')
+write_log(f'Output channel: {ch_out}')
+
 
 model = Attention_UNet(ch_in=ch_in, ch_out=ch_out, dropout=dropout)
 # port model to GPU. ensures optimizer is loaded to GPU as well

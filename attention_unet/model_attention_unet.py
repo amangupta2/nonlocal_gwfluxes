@@ -109,38 +109,28 @@ class Attention_UNet(nn.Module):
     def forward(self,x):
 
         x1 = self.conv1(x)
-        if self.dropout_prob > 0:
-            x1 = self.dropout(x1)
+        x1d=self.dropout(x1)  
  
-        x2 = self.maxpool(x1)
+        x2 = self.maxpool(x1d)
         x2 = self.conv2(x2)
-        if self.dropout_prob > 0:
-            x2 = self.dropout(x2)
+        x2d=self.dropout(x2)
 
-        x3 = self.maxpool(x2)
+        x3 = self.maxpool(x2d)
         x3 = self.conv3(x3)
-        if self.dropout_prob > 0:
-            x3 = self.dropout(x3)
+        x3d=self.dropout(x3)
 
-        x4 = self.maxpool(x3)
+        x4 = self.maxpool(x3d)
         x4 = self.conv4(x4)
-        if self.dropout_prob > 0:
-            x4 = self.dropout(x4)
+        x4d=self.dropout(x4)
 
-        x5 = self.maxpool(x4)
+        x5 = self.maxpool(x4d)
         x5 = self.conv5(x5)
-        if self.dropout_prob > 0:
-            x5 = self.dropout(x5)
+        x5d=self.dropout(x5)
 
-        #print(f'x5 {x5.shape}')
-        g5 = self.up5(x5)
-        #print(f'g5 {g5.shape}')
+        g5 = self.up5(x5d)
         x4 = self.attn5(g=g5,x=x4)
-        #print(f'x4 {x4.shape}')
         g5 = torch.cat((g5,x4), dim=1)
-        #print(f'g5_2 {g5.shape}')
         g5 = self.upconv5(g5)
-        #print(f'g5_3 {g5.shape}')
 
         g4 = self.up4(g5)
         x3 = self.attn4(g=g4,x=x3)

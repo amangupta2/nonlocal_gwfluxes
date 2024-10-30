@@ -68,7 +68,7 @@ if teston=='ERA5':
 
 # -------- To test on three months of IFS data
 elif teston=='IFS':
-    if vertical == 'stratophere_only':
+    if vertical == 'stratosphere_only':
         test_files=[f'/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/stratosphere_only_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc']
     elif vertical == 'global':
          test_files=[f'/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/troposphere_and_stratosphere_1x1_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc']

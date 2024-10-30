@@ -64,7 +64,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # to sel
 # PARAMETERS AND HYPERPARAMETERS
 model_type=sys.argv[1] #'attention' # or 'ann'
 init_epoch=1 # which epoch to resume from. Should have restart file from init_epoch-1 ready
-nepochs=100
+nepochs=200
 # ----------------------
 features=sys.argv[4]#'uvtheta'
 if model_type=="attention":
@@ -73,29 +73,31 @@ else:
     stencil=int(sys.argv[6])
 # ----------------------
 domain=sys.argv[2] #global' # 'regional'. Most likely won't set regional for these experiments. The functions might not be constructed to handle them properly
-vertical=sys.argv[3] #'global' # or 'stratosphere_only'
+vertical=sys.argv[3] #'global' # or 'stratosphere_only' or 'stratosphere_update'
 # ----------------------
 lr_min = 1e-4
 lr_max = 9e-4
 # ----------------------
-dropout=0
+if model_type=="ann":
+    dropout=0.1
+elif model_type=="attention":
+    dropout=0.05
 ckpt_epoch=sys.argv[5]
 if model_type=='ann':
     PATH=f'/scratch/users/ag4680/torch_saved_models/JAMES/{vertical}/ann_cnn_{stencil}x{stencil}_{domain}_{vertical}_era5_{features}__train_epoch{ckpt_epoch}.pt'
 elif model_type=='attention':
     PATH=f'/scratch/users/ag4680/torch_saved_models/attention_unet/attnunet_era5_{domain}_{vertical}_{features}_mseloss_train_epoch{ckpt_epoch}.pt'
 
-
-if vertical == 'global':
+if vertical == 'global' or vertical=='stratosphere_update':
     if model_type=='ann':
-        log_filename=f"./IFStransfer_global_ann_cnn_{stencil}x{stencil}_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+        log_filename=f"./IFStransfer_{vertical}_ann_cnn_{stencil}x{stencil}_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
     elif model_type=='attention':
-        log_filename=f"./IFStransfer_global_attention_{features}_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+        log_filename=f"./IFStransfer_{vertical}_attention_{features}_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 elif vertical == 'stratosphere_only':
     if model_type=='ann':
-        log_filename=f"./IFStransfer_stratosphere_only_ann_cnn_{stencil}x{stencil}_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+        log_filename=f"./IFStransfer_{vertical}_ann_cnn_{stencil}x{stencil}_{features}_6hl_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
     elif model_type=='attention':
-        log_filename=f"./IFStransfer_stratosphere_only_attention_{features}_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
+        log_filename=f"./IFStransfer_{vertical}_attention_{features}_epoch_{init_epoch}_to_{init_epoch+nepochs-1}.txt"
 
 def write_log(*args):
     line = ' '.join([str(a) for a in args])
@@ -116,7 +118,7 @@ elif model_type=='attention':
 # ====================================================================================================
 # DEFINING INPUT FILES
 # This should point to the IFS files
-if vertical == 'global':
+if vertical == 'global' or vertical=='stratosphere_update':
     f=f'/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/troposphere_and_stratosphere_{stencil}x{stencil}_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc'
 elif vertical == 'stratosphere_only':
     f=f'/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/stratosphere_only_{stencil}x{stencil}_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc'
@@ -175,6 +177,9 @@ elif model_type=='attention':
                                          drop_last=False, shuffle=False, num_workers=8)#, persistent_workers=True)
     idim    = trainset.idim
     odim    = trainset.odim
+
+    print(idim)
+    print(odim)
 
 
 write_log(f'Loading model checkpoint from {PATH}')

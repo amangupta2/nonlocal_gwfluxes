@@ -1,7 +1,0 @@
-1) First, did global training of the three models using u,v,theta, to predict uw and vw. The learning rates were 1e-4 to 1e-3
-
-2) There did global training of the three models using u,v,theta, and w, to predict uw and vw. The learning rates were changes to 5e-5 to 5e-3
-
-3) If this goes well, the next models will be trained using u,v,theta, and w, to predict uw and vw, but using more number of hidden layers. Also, need to test ReLU() instead of Leaky ReLU() or something????
-
-4) Also need to try latitude weighted averaging, and RELATIVE ERROR instead of ABSOLUTE ERROR

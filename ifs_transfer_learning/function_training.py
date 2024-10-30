@@ -206,7 +206,7 @@ def Training_ANN_CNN_TransferLearning(nepochs,model,optimizer,loss_fn,trainloade
         trainloss=0.
         count=0.
         for i, (inp, out) in enumerate(trainloader):
-            print(i)
+            #print(i)
             inp=inp.to(device)
             out=out.to(device)
             if stencil==1:
@@ -267,7 +267,7 @@ def Training_AttentionUNet_TransferLearning(nepochs,model,optimizer,loss_fn,trai
         trainloss=0.
         count=0.
         for i, (inp, out) in enumerate(trainloader):
-            print(i)
+            #print(i)
             inp=inp.to(device)
             out=out.to(device)
             pred   =model(inp)

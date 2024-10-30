@@ -1,14 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name=TLtest
+#SBATCH --job-name=TL_attn
 #SBATCH --partition=serc
 #SBATCH -c 10
 #SBATCH -G 1
 #SBATCH --gpus-per-node=1
-#SBATCH --time=12:00:00
+#SBATCH --time=4:00:00
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --output=gpu_slurm-%j.out
 #SBATCH -C GPU_MEM:40GB
-#SBATCH --mem-per-cpu=5GB
+#SBATCH --mem-per-cpu=10GB
 
 # from Mark:
 # use sh_node_feat -p serc (or gpu) to see the node structure of the partition and what GPUs are available
@@ -25,11 +25,21 @@ conda activate siv2
 
 # 'attention/ann' 'global'(horizontal) 'global'/'stratosphere_only'(vertical) and 'feature_set', 'CHECKPOINT_EPOCH'
 # TRAINING - ATTENTION
-#python training_ifs_transfer_learning.py attention global stratosphere_only uvtheta 100
-#python training_ifs_transfer_learning.py attention global stratosphere_only uvthetaw 100
+#python training_ifs_transfer_learning.py attention global global uvtheta 110
+#python training_ifs_transfer_learning.py attention global global uvthetaw 119
+
+python training_ifs_transfer_learning.py attention global stratosphere_only uvtheta 119
+python training_ifs_transfer_learning.py attention global stratosphere_only uvthetaw 105
+
+#python training_ifs_transfer_learning.py attention global stratosphere_update uvtheta 131
+#python training_ifs_transfer_learning.py attention global stratosphere_update uvthetaw 119
+#python training_ifs_transfer_learning.py attention global stratosphere_update uvw 119
+
 
 # TRAINING - ANN_CNN
 # 'attention/ann' 'global'(horizontal) 'global'/'stratosphere_only'(vertical) and 'feature_set', 'CHECKPOINT_EPOCH', <stencil>
-python training_ifs_transfer_learning.py ann global stratosphere_only uvtheta 100 1
+#python training_ifs_transfer_learning.py ann global global uvthetaw 45 5
+#python training_ifs_transfer_learning.py ann global stratosphere_only uvtheta 59 5
+#python training_ifs_transfer_learning.py ann global stratosphere_only uvthetaw 35 5
 
 

@@ -63,11 +63,12 @@ for year in test_years:
     for months in np.arange(test_month,test_month+1):
         test_files.append(f'{pre}{year}_constant_mu_sigma_scaling{str(months).zfill(2)}.nc')
 
-# -------- To test on four months of IFS data
-#if vertical == 'stratosphere_only':
-#    test_files=['/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/stratosphere_only_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc']
-#elif vertical == 'global' or vertical=='stratosphere_update':
-#    test_files=['/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/troposphere_and_stratosphere_1x1_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc']
+# -------- To test on three months of IFS data
+
+if vertical == 'stratosphere_only':
+    test_files=['/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/stratosphere_only_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc']
+elif vertical == 'global' or vertical=='stratosphere_update':
+    test_files=['/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/troposphere_and_stratosphere_1x1_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc']
 
 write_log(f'Inference the Attention UNet model on {domain} horizontal and {vertical} vertical model, with features {features} and dropout={dropout}.')
 write_log(f'Test files = {test_files}')
@@ -100,8 +101,8 @@ model.eval()
 # create netCDF file
 S=ckpt.split('.')
 if dropout==0:
-    out=f'/scratch/users/ag4680/gw_inference_ncfiles/inference_{S[0]}_{test_years[0]}_{test_month}.nc'
-    #out=f'/scratch/users/ag4680/gw_inference_ncfiles/inference_{S[0]}_{test_years[0]}_{test_month}_testedonIFS.nc'
+    #out=f'/scratch/users/ag4680/gw_inference_ncfiles/inference_{S[0]}_{test_years[0]}_{test_month}.nc'
+    out=f'/scratch/users/ag4680/gw_inference_ncfiles/inference_{S[0]}_{test_years[0]}_testedonIFS.nc'
 else:
     out=f'/scratch/users/ag4680/gw_inference_ncfiles/inference_{S[0]}_{test_years[0]}_{test_month}_dropoutON_{sys.argv[5]}.nc'
 write_log(f'Output NC file: {out}')

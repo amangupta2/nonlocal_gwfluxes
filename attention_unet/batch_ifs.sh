@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=I1_attn
+#SBATCH --job-name=I2_attn
 #SBATCH --partition=serc
 #SBATCH -c 10
 #SBATCH -G 1
@@ -29,18 +29,18 @@ conda activate siv2
 #python training_attention_unet.py stratosphere_only uvthetawN2
 
 
-for month in 1 2 3 4 5 6 7 8 9 10 11 12;
-do
-	python inference.py global uvtheta 110 $month
-	python inference.py global uvthetaw 119 $month
+#for month in 1 2 3 4 5 6 7 8 9 10 11 12;
+#do
+python inference_ifs.py global uvtheta 110 1
+python inference_ifs.py global uvthetaw 119 1
 	
-	python inference.py stratosphere_only uvtheta 119 $month
-	python inference.py stratosphere_only uvthetaw 105 $month
+python inference_ifs.py stratosphere_only uvtheta 119 1
+python inference_ifs.py stratosphere_only uvthetaw 105 1
 
-	python inference.py stratosphere_update uvtheta 131 $month
-	python inference.py stratosphere_update uvthetaw 119 $month
-	python inference.py stratosphere_update uvw 119 $month
-done
+python inference_ifs.py stratosphere_update uvtheta 131 1
+python inference_ifs.py stratosphere_update uvthetaw 119 1
+python inference_ifs.py stratosphere_update uvw 119 1
+#done
 
 
 

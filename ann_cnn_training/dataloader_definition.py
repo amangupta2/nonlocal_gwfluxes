@@ -50,6 +50,7 @@ class Dataset_ANN_CNN(torch.utils.data.Dataset):
         self.fac = int(self.stencil/2.)
         self.manual_shuffle=manual_shuffle
 
+
         if self.vertical == 'global':
             # 122 channels for each feature
             if self.features == 'uvtheta':
@@ -58,6 +59,8 @@ class Dataset_ANN_CNN(torch.utils.data.Dataset):
                 self.v = np.arange(0,491) # for u,v,theta,w
             elif self.features == 'uvw':
                 self.v = np.concatenate(  (np.arange(0,247),np.arange(369,491)), axis=0) # for u,v,w
+            self.w = np.arange(0,self.odim) # all vertical channels
+
         elif self.vertical == 'stratosphere_only':
             # 60 channels for each feature
             if self.features == 'uvtheta':
@@ -70,7 +73,18 @@ class Dataset_ANN_CNN(torch.utils.data.Dataset):
                 self.v = np.concatenate(  (np.arange(0,183),np.arange(243,303)), axis=0) # for u,v,theta,N2
             elif self.features == 'uvthetawN2':
                 self.v = self.v = np.arange(0,303) # for u,v,theta,w,N2
+            self.w = np.arange(0,self.odim) # all vertical channels
 
+        elif self.vertical == 'stratosphere_update':
+            # 122 channels for each feature
+            if self.features == 'uvtheta':
+                self.v = np.arange(0,369) # for u,v,theta
+            elif self.features == 'uvthetaw':
+                self.v = np.arange(0,491) # for u,v,theta,w
+            elif self.features == 'uvw':
+                self.v = np.concatenate(  (np.arange(0,247),np.arange(369,491)), axis=0) # for u,v,w
+            self.w = np.concatenate( (np.arange(0,60),np.arange(122,182)) , axis=0) #select upper 60 channels for uw and upper 60 for vw
+            self.odim = len(self.w) # update self.odim accordingly 
 
         self.idim = len(self.v)
 
@@ -142,19 +156,19 @@ class Dataset_ANN_CNN(torch.utils.data.Dataset):
             # Note: assumes that the file is four dimensional (time, channels, lat, lon)
             if self.stencil == 1:
                 I = torch.from_numpy(self.inp[it,self.v,self.y0,self.x0].data.compute())
-                O = torch.from_numpy(self.out[it,:,self.y0,self.x0].data.compute())
+                O = torch.from_numpy(self.out[it,self.w,self.y0,self.x0].data.compute())
                 return I,O
             else:
                 # Add boundary conditions!
                 I = torch.from_numpy(self.inp[it,self.v,self.y0-self.fac:self.y0+self.fac+1,self.x0-self.fac:self.x0+self.fac+1].data.compute())
-                O = torch.from_numpy(self.out[it,:,self.y0,self.x0].data.compute())
+                O = torch.from_numpy(self.out[it,self.w,self.y0,self.x0].data.compute())
                 return I,O
 
         elif self.domain == 'regional':
 
             if self.stencil == 1:
                 I = torch.from_numpy(self.inp[it,self.v,y1:y2,x1:x2].data.compute())
-                O = torch.from_numpy(self.out[it,:,y1:y2,x1:x2].data.compute())
+                O = torch.from_numpy(self.out[it,self.w,y1:y2,x1:x2].data.compute())
 
                 #print(I.shape)
                 #print(O.shape)
@@ -173,7 +187,7 @@ class Dataset_ANN_CNN(torch.utils.data.Dataset):
                 # (time x pressure x lat x lon x st x st)
                 # convolution layer will be applied on the last two dimensions
                 I = torch.from_numpy(self.inp[it,self.v,self.y1:self.y2,self.x1:self.x2,:,:].data.compute())
-                O = torch.squeeze(torch.from_numpy(self.out[it,:,self.y1:self.y2,self.x1:self.x2,self.fac,self.fac].data.compute()))
+                O = torch.squeeze(torch.from_numpy(self.out[it,self.w,self.y1:self.y2,self.x1:self.x2,self.fac,self.fac].data.compute()))
                 # reorder it
                 I = torch.permute(I, (1,2,0,3,4))
                 O = torch.permute(O, (1,2,0))
@@ -188,7 +202,7 @@ class Dataset_ANN_CNN(torch.utils.data.Dataset):
 
             if self.stencil == 1:
                 I = torch.from_numpy(self.inp[it,self.v,:,:].data.compute())
-                O = torch.from_numpy(self.out[it,:,:,:].data.compute())
+                O = torch.from_numpy(self.out[it,self.w,:,:].data.compute())
 
                 #print(I.shape)
                 #print(O.shape)
@@ -206,7 +220,7 @@ class Dataset_ANN_CNN(torch.utils.data.Dataset):
                 # (time x pressure x lat x lon x st x st)
                 # convolution layer will be applied on the last two dimensions
                 I = torch.from_numpy(self.inp[it,self.v,:,:,:,:].data.compute())
-                O = torch.squeeze(torch.from_numpy(self.out[it,:,:,:,self.fac,self.fac].data.compute()))
+                O = torch.squeeze(torch.from_numpy(self.out[it,self.w,:,:,self.fac,self.fac].data.compute()))
                 # first reduce to a 4D tensor by vectorising to (time*lat*lon x pressure x st x st) shape
                 I = torch.permute(I, (1,2,0,3,4))
                 O = torch.permute(O, (1,2,0))
@@ -269,6 +283,8 @@ class Dataset_AttentionUNet(torch.utils.data.Dataset):
                 self.v = np.arange(3,491) # for u,v,theta,w
             elif self.features == 'uvw':
                 self.v = np.concatenate(  (np.arange(3,247),np.arange(369,491)), axis=0) # for u,v,w
+            self.w = np.arange(0,self.odim) # all vertical channels
+
         elif self.vertical == 'stratosphere_only':
             # 60 channels for each feature
             if self.features == 'uvtheta':
@@ -281,6 +297,18 @@ class Dataset_AttentionUNet(torch.utils.data.Dataset):
                 self.v = np.concatenate(  (np.arange(3,183),np.arange(243,303)), axis=0) # for u,v,theta,N2
             elif self.features == 'uvthetawN2':
                 self.v = self.v = np.arange(3,303) # for u,v,theta,w,N2
+            self.w = np.arange(0,self.odim) # all vertical channels
+
+        elif self.vertical == 'stratosphere_update':
+            # 122 channels for each feature
+            if self.features == 'uvtheta':
+                self.v = np.arange(3,369) # for u,v,theta
+            elif self.features == 'uvthetaw':
+                self.v = np.arange(3,491) # for u,v,theta,w
+            elif self.features == 'uvw':
+                self.v = np.concatenate(  (np.arange(3,247),np.arange(369,491)), axis=0) # for u,v,w
+            self.w = np.concatenate( (np.arange(0,60),np.arange(122,182)) , axis=0) #select upper 60 channels for uw and upper 60 for vw
+            self.odim = len(self.w) # update self.odim accordingly 
 
         self.idim = len(self.v)
 
@@ -349,14 +377,14 @@ class Dataset_AttentionUNet(torch.utils.data.Dataset):
         if self.domain == 'regional':
 
             I = torch.from_numpy(self.inp[it,self.v,self.y1:self.y2,self.x1:self.x2].data.compute())
-            O = torch.squeeze(torch.from_numpy(self.out[it,:,self.y1:self.y2,self.x1:self.x2].data.compute()))
+            O = torch.squeeze(torch.from_numpy(self.out[it,self.w,self.y1:self.y2,self.x1:self.x2].data.compute()))
 
             return I,O
 
         elif self.domain == 'global':
 
             I = torch.from_numpy(self.inp[it,self.v,:,:].data.compute())
-            O = torch.from_numpy(self.out[it,:,:,:].data.compute())
+            O = torch.from_numpy(self.out[it,self.w,:,:].data.compute())
 
             return I,O
 
