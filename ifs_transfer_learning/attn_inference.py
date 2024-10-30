@@ -27,7 +27,7 @@ bs_test=bs_train
 
 # --------------------------------------------------
 domain='global' # 'regional'
-vertical=sys.argv[1] #'stratosphere_only' # 'global'
+vertical=sys.argv[1] #'stratosphere_only' # 'global', or 'stratosphere_update'
 features=sys.argv[2] #'uvthetaw' # 'uvtheta', ''uvthetaw', or 'uvw' for troposphere | additionally 'uvthetaN2' and 'uvthetawN2' for stratosphere_only
 dropout=0. # can choose this to be non-zero during inference for uncertainty quantification. A little dropout goes a long way. Choose a small value - 0.03ish?
 epoch=int(sys.argv[3])
@@ -60,7 +60,7 @@ if teston=='ERA5':
     write_log(f'Inference for month {test_month}')
     if vertical == 'stratosphere_only':
         pre='/scratch/users/ag4680/training_data/era5/stratosphere_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
-    elif vertical == 'global':
+    elif vertical == 'global' or vertical=='stratosphere_update':
         pre='/scratch/users/ag4680/training_data/era5/1x1_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_'
     for year in test_years:
         for months in np.arange(test_month,test_month+1):
@@ -70,7 +70,7 @@ if teston=='ERA5':
 elif teston=='IFS':
     if vertical == 'stratosphere_only':
         test_files=[f'/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/stratosphere_only_1x1_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc']
-    elif vertical == 'global':
+    elif vertical == 'global' or vertical=='stratosphere_update':
          test_files=[f'/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/troposphere_and_stratosphere_1x1_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc']
 
 write_log(f'Inference the Attention UNet model on {domain} horizontal and {vertical} vertical model, with features {features} and dropout={dropout}.')

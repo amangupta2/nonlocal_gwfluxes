@@ -14,7 +14,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.distributed as dist
 import torch.multiprocessing as mp
 
-from dataloader_attention_unet import Dataset
+from dataloader_attention_unet import Dataset_AttentionUNet
 from model_attention_unet import Attention_UNet
 from function_training import Training_AttentionUNet, Inference_and_Save_AttentionUNet
 
@@ -73,7 +73,7 @@ write_log(f'Inference the Attention UNet model on {domain} horizontal and {verti
 write_log(f'Test files = {test_files}')
 
 # initialize dataloade
-testset     = Dataset(files=test_files,domain=domain, vertical=vertical, manual_shuffle=False, features=features)
+testset     = Dataset_AttentionUNet(files=test_files,domain=domain, vertical=vertical, manual_shuffle=False, features=features)
 testloader  = torch.utils.data.DataLoader(testset, batch_size=bs_train,
                                           drop_last=False, shuffle=False, num_workers=8)
 
@@ -89,7 +89,7 @@ write_log(f'Model created. \n --- model size: {model.totalsize():.2f} MBs,\n ---
 PATH=pref+ckpt
 if device=='cpu':
     checkpoint=torch.load(PATH, map_location=torch.device('cpu'))
-elif:
+else:
     checkpoint=torch.load(PATH)
 model.load_state_dict(checkpoint['model_state_dict'])
 model=model.to(device)

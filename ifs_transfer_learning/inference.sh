@@ -1,10 +1,10 @@
 #!/bin/bash
-#SBATCH --job-name=TLINF
+#SBATCH --job-name=TLINF_1x1
 #SBATCH --partition=serc
 #SBATCH -c 10
 #SBATCH -G 1
 #SBATCH --gpus-per-node=1
-#SBATCH --time=2:00:00
+#SBATCH --time=48:00:00
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --output=gpu_slurm-%j.out
 #SBATCH -C GPU_MEM:80GB
@@ -40,28 +40,63 @@ conda activate siv2
 
 
 # for ERA5 and dropout=0: <vertical> <features> <ckpt#> <test_on> <validation month> <stencil>
-#for month in 1 2 3 4 5 6 7 8 9 10 11 12;
-#do
-	#python ANN_inference.py global uvtheta 100 ERA5 $month 3
-	#python ANN_inference.py global uvthetaw 100 ERA5 $month 3
-	#python ANN_inference.py stratosphere_only uvtheta 100 ERA5 $month 3
-	#python ANN_inference.py stratosphere_only uvthetaw 100 ERA5 $month 3
+for month in 1 2 3 4 5 6 7 8 9 10 11 12;
+do
+	python ANN_inference.py global uvtheta 200 ERA5 $month 1
+	python ANN_inference.py global uvthetaw 200 ERA5 $month 1
 
-	#python attn_inference.py global uvtheta 100 ERA5 $month
-        #python attn_inference.py global uvthetaw 100 ERA5 $month
-        #python attn_inference.py stratosphere_only uvtheta 100 ERA5 $month
-        #python attn_inference.py stratosphere_only uvthetaw 100 ERA5 $month
-#done
+	python ANN_inference.py stratosphere_only uvtheta 200 ERA5 $month 1
+	python ANN_inference.py stratosphere_only uvthetaw 200 ERA5 $month 1
 
-#python attn_inference.py global uvtheta 100 IFS 1
-#python attn_inference.py global uvthetaw 100 IFS 1
-python attn_inference.py stratosphere_only uvtheta 100 IFS 1
-python attn_inference.py stratosphere_only uvthetaw 100 IFS 1
+	python ANN_inference.py stratosphere_update uvtheta 200 ERA5 $month 1
+        python ANN_inference.py stratosphere_update uvthetaw 200 ERA5 $month 1
+        python ANN_inference.py stratosphere_update uvw 200 ERA5 $month 1
 
-#python ANN_inference.py global uvtheta 100 IFS 1 1
-#python ANN_inference.py global uvthetaw 100 IFS 1 1
-#python ANN_inference.py stratosphere_only uvtheta 100 IFS 1 1
-#python ANN_inference.py stratosphere_only uvthetaw 100 IFS 1 1
+	#python attn_inference.py global uvtheta 200 ERA5 $month
+        #python attn_inference.py global uvthetaw 200 ERA5 $month
+
+        #python attn_inference.py stratosphere_only uvtheta 200 ERA5 $month
+        #python attn_inference.py stratosphere_only uvthetaw 200 ERA5 $month
+
+        #python attn_inference.py stratosphere_update uvtheta 200 ERA5 $month
+        #python attn_inference.py stratosphere_update uvthetaw 200 ERA5 $month
+	#python attn_inference.py stratosphere_update uvw 200 ERA5 $month
+done
+
+#python attn_inference.py global uvtheta 200 IFS 1
+#python attn_inference.py global uvthetaw 200 IFS 1
+
+#python attn_inference.py stratosphere_only uvtheta 200 IFS 1
+#python attn_inference.py stratosphere_only uvthetaw 200 IFS 1
+
+#python attn_inference.py stratosphere_update uvtheta 200 IFS 1
+#python attn_inference.py stratosphere_update uvthetaw 200 IFS 1
+#python attn_inference.py stratosphere_update uvw 200 IFS 1
+
+
+
+#python training_ifs_transfer_learning.py ann global global uvtheta 94 1
+#python training_ifs_transfer_learning.py ann global global uvthetaw 94 1
+
+#python training_ifs_transfer_learning.py ann global stratosphere_only uvtheta 88 1
+#python training_ifs_transfer_learning.py ann global stratosphere_only uvthetaw 100 1
+
+#python training_ifs_transfer_learning.py ann global stratosphere_update uvtheta 100 1
+###python training_ifs_transfer_learning.py ann global stratosphere_update uvthetaw XXX 1
+#python training_ifs_transfer_learning.py ann global stratosphere_update uvw 100 1
+
+
+
+
+python ANN_inference.py global uvtheta 200 IFS 1 1
+python ANN_inference.py global uvthetaw 200 IFS 1 1
+
+python ANN_inference.py stratosphere_only uvtheta 200 IFS 1 1
+python ANN_inference.py stratosphere_only uvthetaw 200 IFS 1 1
+
+python ANN_inference.py stratosphere_update uvtheta 200 IFS 1 1
+python ANN_inference.py stratosphere_update uvthetaw 200 IFS 1 1
+python ANN_inference.py stratosphere_update uvw 200 IFS 1 1
 
 #python ANN_inference.py global uvtheta 100 IFS 1 3
 #python ANN_inference.py global uvthetaw 100 IFS 1 3

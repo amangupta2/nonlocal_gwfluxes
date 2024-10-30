@@ -68,7 +68,7 @@ if teston=='ERA5':
             pre=f'/scratch/users/ag4680/training_data/era5/stratosphere_{stencil}x{stencil}_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
         else:
              pre=f'/scratch/users/ag4680/training_data/era5/stratosphere_nonlocal_{stencil}x{stencil}_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_'
-    elif vertical == 'global':
+    elif vertical == 'global' or vertical == 'stratosphere_update':
         if stencil == 1:
             pre=f'/scratch/users/ag4680/training_data/era5/{stencil}x{stencil}_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_'
         else:
@@ -82,7 +82,7 @@ if teston=='ERA5':
 elif teston=='IFS':
     if vertical == 'stratosphere_only':
         test_files=[f'/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/stratosphere_only_{stencil}x{stencil}_inputfeatures_u_v_theta_w_N2_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc']
-    elif vertical == 'global':
+    elif vertical == 'global' or vertical == 'stratosphere_update':
          test_files=[f'/scratch/users/ag4680/coarsegrained_ifs_gwmf_helmholtz/NDJF/troposphere_and_stratosphere_{stencil}x{stencil}_inputfeatures_u_v_theta_w_uw_vw_era5_training_data_hourly_constant_mu_sigma_scaling.nc']
 
 write_log(f'Inference the ANN_CNN model on {domain} horizontal and {vertical} vertical model, with features {features} and dropout={dropout}.')
@@ -91,7 +91,7 @@ write_log(f'Test files = {test_files}')
 # initialize dataloader
 testset     = Dataset_ANN_CNN(files=test_files,domain=domain, vertical=vertical, stencil=stencil, manual_shuffle=False, features=features)
 testloader  = torch.utils.data.DataLoader(testset, batch_size=bs_train,
-                                          drop_last=False, shuffle=False, num_workers=4)
+                                          drop_last=False, shuffle=False, num_workers=8)
 
 idim  = testset.idim
 odim  = testset.odim

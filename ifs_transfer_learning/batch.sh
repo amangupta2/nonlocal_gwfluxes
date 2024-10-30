@@ -1,10 +1,10 @@
 #!/bin/bash
-#SBATCH --job-name=TL_attn
+#SBATCH --job-name=TL_3x3
 #SBATCH --partition=serc
 #SBATCH -c 10
 #SBATCH -G 1
 #SBATCH --gpus-per-node=1
-#SBATCH --time=4:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --output=gpu_slurm-%j.out
 #SBATCH -C GPU_MEM:40GB
@@ -28,8 +28,8 @@ conda activate siv2
 #python training_ifs_transfer_learning.py attention global global uvtheta 110
 #python training_ifs_transfer_learning.py attention global global uvthetaw 119
 
-python training_ifs_transfer_learning.py attention global stratosphere_only uvtheta 119
-python training_ifs_transfer_learning.py attention global stratosphere_only uvthetaw 105
+#python training_ifs_transfer_learning.py attention global stratosphere_only uvtheta 119
+#python training_ifs_transfer_learning.py attention global stratosphere_only uvthetaw 105
 
 #python training_ifs_transfer_learning.py attention global stratosphere_update uvtheta 131
 #python training_ifs_transfer_learning.py attention global stratosphere_update uvthetaw 119
@@ -38,8 +38,25 @@ python training_ifs_transfer_learning.py attention global stratosphere_only uvth
 
 # TRAINING - ANN_CNN
 # 'attention/ann' 'global'(horizontal) 'global'/'stratosphere_only'(vertical) and 'feature_set', 'CHECKPOINT_EPOCH', <stencil>
-#python training_ifs_transfer_learning.py ann global global uvthetaw 45 5
-#python training_ifs_transfer_learning.py ann global stratosphere_only uvtheta 59 5
-#python training_ifs_transfer_learning.py ann global stratosphere_only uvthetaw 35 5
+# 1x1
+#python training_ifs_transfer_learning.py ann global global uvtheta 94 1
+#python training_ifs_transfer_learning.py ann global global uvthetaw 94 1
+
+#python training_ifs_transfer_learning.py ann global stratosphere_only uvtheta 88 1
+#python training_ifs_transfer_learning.py ann global stratosphere_only uvthetaw 100 1
+
+#python training_ifs_transfer_learning.py ann global stratosphere_update uvtheta 100 1
+###python training_ifs_transfer_learning.py ann global stratosphere_update uvthetaw XXX 1
+#python training_ifs_transfer_learning.py ann global stratosphere_update uvw 100 1
 
 
+# 3x3
+python training_ifs_transfer_learning.py ann global global uvtheta 52 3
+python training_ifs_transfer_learning.py ann global global uvthetaw 80 3
+
+python training_ifs_transfer_learning.py ann global stratosphere_only uvtheta 93 3
+python training_ifs_transfer_learning.py ann global stratosphere_only uvthetaw 38 3
+
+python training_ifs_transfer_learning.py ann global stratosphere_update uvtheta 68 3
+###python training_ifs_transfer_learning.py ann global stratosphere_update uvthetaw XXX 3
+###python training_ifs_transfer_learning.py ann global stratosphere_update uvw 100 3
