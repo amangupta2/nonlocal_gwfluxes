@@ -4,7 +4,7 @@
 #SBATCH -c 10
 #SBATCH -G 1
 #SBATCH --gpus-per-node=1
-#SBATCH --time=24:00:00
+#SBATCH --time=72:00:00
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --output=gpu_slurm-%j.out
 #SBATCH -C GPU_MEM:40GB
@@ -51,8 +51,8 @@ conda activate siv2
 
 
 # 3x3
-python training_ifs_transfer_learning.py ann global global uvtheta 52 3
-python training_ifs_transfer_learning.py ann global global uvthetaw 80 3
+#python training_ifs_transfer_learning.py ann global global uvtheta 52 3
+#python training_ifs_transfer_learning.py ann global global uvthetaw 80 3
 
 python training_ifs_transfer_learning.py ann global stratosphere_only uvtheta 93 3
 python training_ifs_transfer_learning.py ann global stratosphere_only uvthetaw 38 3
