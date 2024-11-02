@@ -21,19 +21,19 @@ The models are trained on modern reanalysis ERA5 which resolves part of the atmo
 ## Usage
 
 ### Training
-The code to train M1 and M2 is contained in the ann_cnn_training directory. The code is split into multiple files but the main is invoked in training.py. The model training can be submitted as a single GPU task using the batch.sh script using the command:
+The code to train M1 and M2 is contained in the `ann_cnn_training` directory. The code is split into multiple files but the main is invoked in `training.py`. The model training can be submitted as a single GPU task using the `batch.sh` script using the command:
 ```bash
     python training.py <horizontal_domain> <vertical_domain> <features> <stencil>
 ```
-*horizontal domain:* 'regional' or 'global'
+*horizontal domain:* `regional` or `global`
 
-*vertical domain:* 'global' or 'stratosphere_only'
+*vertical domain:* `global`, `stratosphere_only`, or `stratosphere_update`
 
-*features:* 'uvtheta', 'uvthetaw', or 'uvw' for 'global' vertical domain, and 'uvtheta', 'uvthetaw', 'uvw', 'uvthetaN2', or 'uvthetawN2' for 'stratosphere_only' vertical domain
+*features:* `uvtheta`, `uvthetaw`, or `uvw` for `global` and `stratosphere_update` vertical domain, and `uvtheta`, `uvthetaw`, `uvw`, `uvthetaN2`, or `uvthetawN2` for `stratosphere_only` vertical domain (due to data storage considerations)
 
 *stencil:* 1 for single column (M1), 3 for 3x3 regional nonlocality (M2), 5 for 5x5 regional nonlocality and so on 
 
-Likewise, the code to train M3 is contained in the attention_unet directory. The main function is invoked in training_attention_unet.py, and the training can be submitted using the batch.sh script in the attention_unet directory using the command:
+Likewise, the code to train M3 is contained in the `attention_unet` directory. The main function is invoked in `training_attention_unet.py`, and the training can be submitted using the `batch.sh` script in the attention_unet directory using the command:
 ```bash
     python training_attention_unet.py <vertical_domain> <features>
 ```
@@ -42,7 +42,7 @@ Here, the horizontal domain is assumed to be global and the stencil argument is 
 
 
 ### Inference
-By default, the models are trained on three years of ERA5 data, and a fourth year is used for validation. Inference scripts, inference.py, are provided in the respective directories, and can be used as:
+By default, the models are trained on three years of ERA5 data, and a fourth year is used for validation. Inference scripts, `inference.py`, are provided in the respective directories, and can be used as:
 
 ```bash
     python inference.py <horizontal_domain> <vertical_domain> <features> <epoch_number> <month> <stencil>
