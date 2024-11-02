@@ -11,7 +11,7 @@ The three models are schematically depicted in the animation below
 
 
 
-![Schematic for the three models](https://amangupta2.github.io/images/icml_schematic.gif)
+![Schematic for the three models](https://amangupta2.github.io/images/icml_schematic_static.jpg)
 
 
 
