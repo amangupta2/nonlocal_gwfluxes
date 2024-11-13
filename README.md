@@ -20,6 +20,18 @@ The models are trained on modern reanalysis ERA5 which resolves part of the atmo
 
 ## Usage
 
+### Dependencies
+
+To use these scripts, users will first need to install the following dependencies:
+
+* `pytorch`
+* `netCDF4`
+* `numpy`
+* `xarray`
+
+> [!NOTE]
+> A `pyproject.toml` or `requirements.txt` will be uploaded shortly, to make installing the dependencies easier.
+
 ### Training
 The code to train M1 and M2 is contained in the `ann_cnn_training` directory. The code is split into multiple files but the main is invoked in `training.py`. The model training can be submitted as a single GPU task using the `batch.sh` script using the command:
 ```bash
